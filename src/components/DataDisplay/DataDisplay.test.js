@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ResultPrimary from './ResultPrimary';
+import DataDisplay from './DataDisplay';
 
-describe('ResultPrimary', () => {
+describe('DataDisplay', () => {
   test('matches snapshot', () => {
-    const wrapper = shallow(<ResultPrimary />);
+    const wrapper = shallow(<DataDisplay />);
     expect(wrapper).toMatchSnapshot();
   });
 });

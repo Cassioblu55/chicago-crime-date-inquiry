@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ResultSecondary from './ResultSecondary';
+import GraphDisplay from './GraphDisplay';
 
-describe('ResultSecondary', () => {
+describe('GraphDisplay', () => {
   test('matches snapshot', () => {
-    const wrapper = shallow(<ResultSecondary />);
+    const wrapper = shallow(<GraphDisplay />);
     expect(wrapper).toMatchSnapshot();
   });
 });
