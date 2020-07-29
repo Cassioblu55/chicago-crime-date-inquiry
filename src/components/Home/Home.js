@@ -8,13 +8,23 @@ import { Row, Col } from 'react-bootstrap';
 import GraphDisplay from '../GraphDisplay';
 import DataDisplay from '../DataDisplay';
 import DateChanger from '../DateChanger';
+import DateFormat from 'date-format';
 
 class Home extends Component {
 	render() {
-		return (
+    const dateDisplay = DateFormat.asString(
+			'MM-dd',
+			this.props.allCrimeByTypeFromSingleDate
+		);
+    return (
 			<Container>
 				<DateChanger />
-				<GraphDisplay />
+				<h3 className='text-center'>All Crimes Reported on {dateDisplay}</h3>
+				<GraphDisplay
+					data={this.props.mainGraphData}
+					axisBottomLegend='Crime Type'
+					axisLeftLegend='Crime Count'
+				/>
 				<Row>
 					<Col>
 						<DataDisplay />

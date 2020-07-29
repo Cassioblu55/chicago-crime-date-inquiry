@@ -17,7 +17,7 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			allCrimeByTypeFromSingleDate: new Date(2012,4,4),
+			allCrimeByTypeFromSingleDate: new Date(2012,5,13),
 			allCrimeByTypeFromSingleDateData: undefined,
 		};
 	}
@@ -57,6 +57,9 @@ class App extends Component {
 								render={() => (
 									<Home
 										mainGraphData={this.state.allCrimeByTypeFromSingleDateData}
+										allCrimeByTypeFromSingleDate={
+											this.state.allCrimeByTypeFromSingleDate
+										}
 									/>
 								)}
 							/>

@@ -27,7 +27,7 @@ function groupCrimeByType(data) {
 		if (groupedData[type] !== undefined) {
 			groupedData[type] = groupedData[type]+1;
 		} else {
-			groupedData[type] = 0;
+			groupedData[type] = 1;
 		}
 	}
 	return groupedData;
