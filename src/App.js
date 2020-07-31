@@ -66,7 +66,6 @@ class App extends Component {
 			<Container>
 				<HashRouter basename='/'>
 					<Header />
-					<Search />
 					<main>
 						<Switch>
 							<Route

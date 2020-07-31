@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import './Header.css';
 
 class Header extends Component {
   render() {
-    return <div>Header</div>;
+    return <h1 className='mainHeader text-center'>Chicago Crime Date Inquiry</h1>;
   }
 }
 
