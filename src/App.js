@@ -17,7 +17,7 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			allCrimeByTypeFromSingleDate: new Date(2012,5,13),
+			allCrimeByTypeFromSingleDate: new Date(2020, 6, 4),
 			allCrimeByTypeFromSingleDateData: undefined,
 		};
 	}
@@ -43,6 +43,13 @@ class App extends Component {
 		);
 	};
 
+	setAllCrimeByTypeFromSingleDate = (date) =>{
+		this.setState({
+			allCrimeByTypeFromSingleDate: date,
+		});
+		this.getAllCrimeByTypeFromSingleDate(date);
+	}
+
 	render() {
 		return (
 			<Container>
@@ -60,10 +67,12 @@ class App extends Component {
 										allCrimeByTypeFromSingleDate={
 											this.state.allCrimeByTypeFromSingleDate
 										}
+										setAllCrimeByTypeFromSingleDate={
+											this.setAllCrimeByTypeFromSingleDate
+										}
 									/>
 								)}
 							/>
-
 							<Redirect path='*' to='/home' />
 						</Switch>
 					</main>

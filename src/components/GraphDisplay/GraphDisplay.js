@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
+import { Container } from 'react-bootstrap';
 
-const hexChars = '23456789ABD';
 
 const COLORS = [
 	'#8783D1',
@@ -17,78 +17,37 @@ const COLORS = [
 	'#42033D',
 ];
 
-const getRandomColor = () => {
-	return `#${Array.from({ length: 6 })
-		.map(() => hexChars[Math.floor(Math.random() * 11)])
-		.join('')}`;
-};
-
 const getBarColor = (bar) => {
-	console.log(bar);
 	if (bar.index < COLORS.length) {
 		return COLORS[bar.index];
 	} else {
-		return getRandomColor();
+		return COLORS[bar.index - COLORS.length];
 	}
 };
 
 class GraphDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
-			console.log(this.props.data);
 			return (
-				<div style={{ height: '500px' }}>
+				<Container style={{height: '400px'}}>
+					<h3 className='text-center'>{this.props.header}</h3>
 					<ResponsiveBar
 						data={this.createDisplayData(this.props.data)}
-						keys={['amount']}
-						indexBy='key'
-						margin={{ top: 0, right: 130, bottom: 125, left: 60 }}
+						keys={Object.keys(this.props.data)}
+						indexBy='keyDisplay'
+						margin={{ top: 10, right: 130, bottom: 110, left: 60 }}
 						padding={0.3}
 						colors={getBarColor}
-						defs={[
-							{
-								id: 'dots',
-								type: 'patternDots',
-								background: 'inherit',
-								color: '#38bcb2',
-								size: 4,
-								padding: 1,
-								stagger: true,
-							},
-							{
-								id: 'lines',
-								type: 'patternLines',
-								background: 'inherit',
-								color: '#eed312',
-								rotation: -45,
-								lineWidth: 6,
-								spacing: 10,
-							},
-						]}
-						fill={[
-							{
-								match: {
-									id: 'lines',
-								},
-								id: 'dots',
-							},
-							{
-								match: {
-									id: 'sandwich',
-								},
-								id: 'lines',
-							},
-						]}
 						borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
 						axisTop={null}
 						axisRight={null}
 						axisBottom={{
 							tickSize: 5,
 							tickPadding: 5,
-							tickRotation: 20,
+							tickRotation: 90,
 							legend: this.props.axisBottomLegend,
 							legendPosition: 'middle',
-							legendOffset: 75,
+							legendOffset: 53,
 						}}
 						axisLeft={{
 							tickSize: 5,
@@ -105,7 +64,7 @@ class GraphDisplay extends Component {
 						motionStiffness={90}
 						motionDamping={15}
 					/>
-				</div>
+				</Container>
 			);
 		} else {
 			return <div></div>;
@@ -114,12 +73,15 @@ class GraphDisplay extends Component {
 
 	createDisplayData = (data) => {
 		const displayData = [];
+		let activeDisplayKeys = [];
 		Object.keys(data).forEach((key) => {
-			displayData.push({
-				key: key,
-				amount: data[key],
-				fill: '#61cdbg',
-			});
+			let column = {};
+			column[key] = data[key];
+			column.amount = data[key];
+			let newColumnData = this.getKeyDisplay(key, activeDisplayKeys);
+			column.keyDisplay = newColumnData.keyDisplay;
+			activeDisplayKeys = newColumnData.activeDisplayKeys;
+			displayData.push(column);
 		});
 		return displayData.sort(function (a, b) {
 			var x = a['amount'];
@@ -127,6 +89,23 @@ class GraphDisplay extends Component {
 			return x > y ? -1 : x < y ? 1 : 0;
 		});
 	};
+
+	getKeyDisplay(key, activeDisplayKeys) {
+		if (key.length > 4) {
+			key = key.replace(" ", "");
+			let keyDisplay = key.substring(0, 4);
+			let offSet = 1;
+			while (activeDisplayKeys.includes(keyDisplay)) {
+				let max = key.length < 4 + offSet ? key.length : 4 + offSet;
+				keyDisplay = key.substring(0 + offSet, max);
+				offSet++;
+			}
+			activeDisplayKeys.push(keyDisplay);
+			return { keyDisplay, activeDisplayKeys };
+		} else {
+			return key;
+		}
+	}
 }
 
 export default GraphDisplay;

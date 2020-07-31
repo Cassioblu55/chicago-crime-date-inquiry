@@ -7,11 +7,12 @@ import {
 } from '../../api/ChicagoCrimeDataApi';
 
 export function AllCrimeByTypeFromSingleDate(date, callOnSuccess, callOnError) {
+	
 	ChicagoCrimeDataApi()
-		.get(CRIMES_2001_TO_PRESENT, {
-			params: GetParams(date),
-		})
-		.then(function (response) {
+	.get(CRIMES_2001_TO_PRESENT, {
+		params: GetParams(date),
+	})
+	.then(function (response) {
 			const groupedData = groupCrimeByType(response.data);
 			callOnSuccess(groupedData);
 		})
