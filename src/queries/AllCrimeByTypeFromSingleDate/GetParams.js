@@ -1,35 +1,10 @@
-import Moment from 'moment';
-import { extendMoment } from 'moment-range';
-
-const QUERY_BASE = 'SELECT id, primary_type WHERE date in(';
-const QUERY_TERMINATOR = ")"
-
 export function GetParams(date) {
 	return {
-		$query: getAllYearsQuery(date),
+		$select: 'primary_type, count(primary_type) as count',
+		$where: `date_extract_m(date)=${
+			date.getMonth() + 1
+		} AND date_extract_d(date)=${date.getDate()}`,
+		$group: 'primary_type',
+		$order: 'count DESC',
 	};
-}
-
-function getAllYearsQuery(date){
-	return QUERY_BASE + getAllYearsList(date) + QUERY_TERMINATOR;
-}
-
-function getAllYearsList(date){
-	return getAllYearsFromPresentTo2001().map(year =>{
-		return getYear(date, year);
-	})
-}
-
-function getYear(date, year){
-	return `'${year}-${date.getMonth()+1}-${date.getDate()}'`;
-}
-
-function getAllYearsFromPresentTo2001(){
-	let yearCounter = new Date().getFullYear();
-	const allYearsFromPresentTo2001 = [];
-	while (yearCounter > 2000){
-		allYearsFromPresentTo2001.push(yearCounter);
-		yearCounter--;
-	}
-	return allYearsFromPresentTo2001;
 }

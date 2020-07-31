@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { Container } from 'react-bootstrap';
 
-
 const COLORS = [
 	'#8783D1',
 	'#AA9ABA',
@@ -20,16 +19,19 @@ const COLORS = [
 const getBarColor = (bar) => {
 	if (bar.index < COLORS.length) {
 		return COLORS[bar.index];
-	} else {
-		return COLORS[bar.index - COLORS.length];
 	}
+	let offSet = COLORS.length;
+	while (bar.index - offSet >= COLORS.length) {
+		offSet += COLORS.length;
+	}
+	return COLORS[bar.index - offSet];
 };
 
 class GraphDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
 			return (
-				<Container style={{height: '400px'}}>
+				<Container style={{ height: '400px' }}>
 					<h3 className='text-center'>{this.props.header}</h3>
 					<ResponsiveBar
 						data={this.createDisplayData(this.props.data)}
@@ -55,7 +57,7 @@ class GraphDisplay extends Component {
 							tickRotation: 0,
 							legend: this.props.axisLeftLegend,
 							legendPosition: 'middle',
-							legendOffset: -40,
+							legendOffset: -52,
 						}}
 						labelSkipWidth={12}
 						labelSkipHeight={12}
@@ -83,16 +85,12 @@ class GraphDisplay extends Component {
 			activeDisplayKeys = newColumnData.activeDisplayKeys;
 			displayData.push(column);
 		});
-		return displayData.sort(function (a, b) {
-			var x = a['amount'];
-			var y = b['amount'];
-			return x > y ? -1 : x < y ? 1 : 0;
-		});
+		return displayData;
 	};
 
 	getKeyDisplay(key, activeDisplayKeys) {
 		if (key.length > 4) {
-			key = key.replace(" ", "");
+			key = key.replace(' ', '');
 			let keyDisplay = key.substring(0, 4);
 			let offSet = 1;
 			while (activeDisplayKeys.includes(keyDisplay)) {

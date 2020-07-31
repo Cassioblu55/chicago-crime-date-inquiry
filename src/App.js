@@ -13,12 +13,15 @@ import Search from './components/Search';
 //QUERY HELPERS
 import { AllCrimeByTypeFromSingleDate } from './queries/AllCrimeByTypeFromSingleDate/AllCrimeByTypeFromSingleDate';
 
+import { AllCrimeByDate } from './queries/AllCrimeByDate/AllCrimeByDate';
+
 class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			allCrimeByTypeFromSingleDate: new Date(2020, 6, 4),
+			allCrimeByTypeFromSingleDate: new Date(),
 			allCrimeByTypeFromSingleDateData: undefined,
+			allCrimeByDate: undefined,
 		};
 	}
 
@@ -26,6 +29,7 @@ class App extends Component {
 		this.getAllCrimeByTypeFromSingleDate(
 			this.state.allCrimeByTypeFromSingleDate
 		);
+		this.getAllCrimeByDate();
 	}
 
 	callOnErrorDefault = (error) => {
@@ -43,11 +47,18 @@ class App extends Component {
 		);
 	};
 
-	setAllCrimeByTypeFromSingleDate = (date) =>{
+	setAllCrimeByTypeFromSingleDate = (date) => {
 		this.setState({
 			allCrimeByTypeFromSingleDate: date,
 		});
 		this.getAllCrimeByTypeFromSingleDate(date);
+	};
+
+	getAllCrimeByDate() {
+		let self = this;
+		AllCrimeByDate(function (results) {
+			self.setState({ allCrimeByDate: results });
+		}, this.callOnErrorDefault);
 	}
 
 	render() {
@@ -70,6 +81,7 @@ class App extends Component {
 										setAllCrimeByTypeFromSingleDate={
 											this.setAllCrimeByTypeFromSingleDate
 										}
+										allCrimeByDate={this.state.allCrimeByDate}
 									/>
 								)}
 							/>

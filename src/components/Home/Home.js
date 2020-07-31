@@ -9,8 +9,50 @@ import GraphDisplay from '../GraphDisplay';
 import DataDisplay from '../DataDisplay';
 import DateChanger from '../DateChanger';
 import DateFormat from 'date-format';
+import Numeral from 'numeral';
+import Moment from 'moment';
 
 class Home extends Component {
+	getTopTenCrimeDays = (data) => {
+		if (data !== undefined) {
+			return data
+				.sort((a, b) => (a.amount > b.amount ? -1 : 1))
+				.slice(0, 10)
+				.map((row) => {
+					return {
+						left: this.formatDate(row.date),
+						right: this.formatAmount(row.amount),
+					};
+				});
+		} else {
+			return undefined;
+		}
+	};
+
+	getBottomTenCrimeDays = (data) => {
+		if (data !== undefined) {
+			return data
+				.sort((a, b) => (a.amount < b.amount ? -1 : 1))
+				.slice(0, 10)
+				.map((row) => {
+					return {
+						left: this.formatDate(row.date),
+						right: this.formatAmount(row.amount),
+					};
+				});
+		} else {
+			return undefined;
+		}
+	};
+
+	formatAmount(amount) {
+		return Numeral(amount).format('0,0');
+	}
+
+	formatDate(date) {
+		return Moment(date, 'MM-DD').format('MMMM Do');
+	}
+
 	render() {
 		const dateDisplay = DateFormat.asString(
 			'MM-dd',
@@ -32,10 +74,18 @@ class Home extends Component {
 				</Row>
 				<Row>
 					<Col>
-						<DataDisplay />
+						<DataDisplay
+							data={this.getTopTenCrimeDays(this.props.allCrimeByDate)}
+							header='Days with Most Crime'
+						/>
 					</Col>
 					<Col>
-						<DataDisplay />
+						<DataDisplay
+							data={this.getBottomTenCrimeDays(this.props.allCrimeByDate)}
+							header='Days with Least Crime'
+							leftSideKey='date'
+							rightSideKey='count'
+						/>
 					</Col>
 				</Row>
 			</Container>
