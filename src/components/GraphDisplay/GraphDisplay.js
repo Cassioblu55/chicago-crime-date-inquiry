@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
-import { Container } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
+import './GraphDisplay.css';
 
 const COLORS = [
 	'#8783D1',
@@ -31,41 +32,45 @@ class GraphDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
 			return (
-				<Container style={{ height: '400px' }}>
+				<Container>
 					<h3 className='text-center'>{this.props.header}</h3>
-					<ResponsiveBar
-						data={this.createDisplayData(this.props.data)}
-						keys={Object.keys(this.props.data)}
-						indexBy='keyDisplay'
-						margin={{ top: 10, right: 130, bottom: 110, left: 60 }}
-						padding={0.3}
-						colors={getBarColor}
-						borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-						axisTop={null}
-						axisRight={null}
-						axisBottom={{
-							tickSize: 5,
-							tickPadding: 5,
-							tickRotation: 90,
-							legend: this.props.axisBottomLegend,
-							legendPosition: 'middle',
-							legendOffset: 53,
-						}}
-						axisLeft={{
-							tickSize: 5,
-							tickPadding: 5,
-							tickRotation: 0,
-							legend: this.props.axisLeftLegend,
-							legendPosition: 'middle',
-							legendOffset: -52,
-						}}
-						labelSkipWidth={12}
-						labelSkipHeight={12}
-						labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-						animate={true}
-						motionStiffness={90}
-						motionDamping={15}
-					/>
+					<Row
+						style={{ height: '400px' }}
+						className={this.props.locked && 'graphLoading'}>
+						<ResponsiveBar
+							data={this.createDisplayData(this.props.data)}
+							keys={Object.keys(this.props.data)}
+							indexBy='keyDisplay'
+							margin={{ top: 10, right: 130, bottom: 70, left: 60 }}
+							padding={0.3}
+							colors={getBarColor}
+							borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+							axisTop={null}
+							axisRight={null}
+							axisBottom={{
+								tickSize: 5,
+								tickPadding: 5,
+								tickRotation: 90,
+								legend: this.props.axisBottomLegend,
+								legendPosition: 'middle',
+								legendOffset: 53,
+							}}
+							axisLeft={{
+								tickSize: 5,
+								tickPadding: 5,
+								tickRotation: 0,
+								legend: this.props.axisLeftLegend,
+								legendPosition: 'middle',
+								legendOffset: -52,
+							}}
+							labelSkipWidth={12}
+							labelSkipHeight={12}
+							labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+							animate={true}
+							motionStiffness={90}
+							motionDamping={15}
+						/>
+					</Row>
 				</Container>
 			);
 		} else {

@@ -1,0 +1,15 @@
+.dataDisplayRow{
+    border-bottom: rgb(114, 113, 113) solid 2px;
+}
+
+.dataDisplayRow:hover{
+    font-weight: bold;
+}
+
+.dataDisplayRowLoading:hover{
+    cursor: progress;
+}
+
+.dataDisplayRowReady:hover{
+    cursor: pointer;
+}

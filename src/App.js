@@ -22,6 +22,7 @@ class App extends Component {
 			allCrimeByTypeFromSingleDate: new Date(),
 			allCrimeByTypeFromSingleDateData: undefined,
 			allCrimeByDate: undefined,
+			dateChangerLocked: false,
 		};
 	}
 
@@ -38,16 +39,21 @@ class App extends Component {
 
 	getAllCrimeByTypeFromSingleDate = (date) => {
 		let self = this;
+		this.setState({ dateChangerLocked: true });
 		AllCrimeByTypeFromSingleDate(
 			date,
 			function (results) {
-				self.setState({ allCrimeByTypeFromSingleDateData: results });
+				self.setState({
+					allCrimeByTypeFromSingleDateData: results,
+					dateChangerLocked: false,
+				});
 			},
 			this.callOnErrorDefault
 		);
 	};
 
 	setAllCrimeByTypeFromSingleDate = (date) => {
+		console.log(date);
 		this.setState({
 			allCrimeByTypeFromSingleDate: date,
 		});
@@ -63,7 +69,7 @@ class App extends Component {
 
 	render() {
 		return (
-			<Container>
+			<Container className={this.state.dateChangerLocked && 'anyGraphsLoading'}>
 				<HashRouter basename='/'>
 					<Header />
 					<main>
@@ -73,6 +79,7 @@ class App extends Component {
 								path='/home'
 								render={() => (
 									<Home
+										dateChangerLocked={this.state.dateChangerLocked}
 										mainGraphData={this.state.allCrimeByTypeFromSingleDateData}
 										allCrimeByTypeFromSingleDate={
 											this.state.allCrimeByTypeFromSingleDate

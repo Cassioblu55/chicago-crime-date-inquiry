@@ -29,7 +29,10 @@ class DateChanger extends Component {
 			<Container>
 				<Row>
 					<Col>
-						<Button variant='dark' onClick={this.subtractDay}>
+						<Button
+							variant='dark'
+							onClick={this.subtractDay}
+							disabled={this.props.locked}>
 							<IconContext.Provider
 								value={{
 									style: { transform: 'scaleX(-1)' },
@@ -39,10 +42,17 @@ class DateChanger extends Component {
 						</Button>
 					</Col>
 					<Col>
-						<DatePicker value={this.props.date} onChange={this.props.setDate} />
+						<DatePicker
+							value={this.props.date}
+							onChange={this.props.setDate}
+							disabled={this.props.locked}
+						/>
 					</Col>
 					<Col>
-						<Button variant='dark' onClick={this.addDay}>
+						<Button
+							variant='dark'
+							onClick={this.addDay}
+							disabled={this.props.locked}>
 							<MdPlayArrow />
 						</Button>
 					</Col>

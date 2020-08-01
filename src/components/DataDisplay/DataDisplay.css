@@ -1,12 +1,8 @@
-.dataDisplayRow{
-    border-bottom: rgb(114, 113, 113) solid 2px;
-}
-
-.dataDisplayRow:hover{
-    font-weight: bold;
-    cursor: default;
-}
-
 .dataDisplayHeader{
+    font-weight: bold;
+}
+
+
+.rowSelected{
     font-weight: bold;
 }
