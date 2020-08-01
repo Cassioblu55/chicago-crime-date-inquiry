@@ -14,7 +14,7 @@ import { AllCrimeByTypeFromSingleDate } from './queries/AllCrimeByTypeFromSingle
 import { AllCrimeByDate } from './queries/AllCrimeByDate/AllCrimeByDate';
 import { AllCrimeByMonth } from './queries/AllCrimeByMonth/AllCrimeByMonth';
 import { SingleYear } from './queries/SingleYear/SingleYear';
-import { MdTurnedIn } from 'react-icons/md';
+import { SingleMonth } from './queries/SingleMonth/SingleMonth';
 
 class App extends Component {
 	constructor() {
@@ -28,8 +28,10 @@ class App extends Component {
 			lineGraphLock: false,
 			allCrimeByMonth: undefined,
 			selectedSingleYear: undefined,
-			allCrimeBySingleYearByDay: undefined,
-			singleYearColor: undefined,
+			allCrimeBySingleYear: undefined,
+			lineGraphColor: undefined,
+			allCrimeBySingleMonth: undefined,
+			selectedSingleMonth: undefined,
 		};
 	}
 
@@ -69,7 +71,25 @@ class App extends Component {
 				year,
 				function (results) {
 					self.setState({
-						allCrimeBySingleYearByDay: results,
+						allCrimeBySingleYear: results,
+						lineGraphLock: false,
+					});
+				},
+				this.callOnErrorDefault
+			);
+		}
+	};
+
+	getCrimeDataBySingleMonth = (year, month) => {
+		if (year !== undefined && month !== undefined) {
+			this.setState({ lineGraphLock: true });
+			let self = this;
+			SingleMonth(
+				year,
+				month,
+				function (results) {
+					self.setState({
+						allCrimeBySingleMonth: results,
 						lineGraphLock: false,
 					});
 				},
@@ -106,12 +126,26 @@ class App extends Component {
 		this.getCrimeDataBySingleYear(year);
 	};
 
+	setSelectedSingeMonth = (month) => {
+		if (this.state.selectedSingleYear !== undefined) {
+			this.setState({ selectedSingleMonth: month });
+			this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
+		}
+	};
+
 	setSelectedSingleYearColor = (color) => {
-		this.setState({ singleYearColor: color });
+		this.setState({ lineGraphColor: color });
 	};
 
 	setMonthYear = (point) => {
-		console.log(point);
+		let yearMonth = point.id.split('.').map((data) => parseInt(data));
+		let month = yearMonth[1] + 1;
+		let year = yearMonth[0];
+		this.getCrimeDataBySingleMonth(year, month);
+		this.setState({
+			selectedSingleYear: year,
+			selectedSingleMonth: month,
+		});
 	};
 
 	render() {
@@ -142,15 +176,16 @@ class App extends Component {
 										allCrimeByDate={this.state.allCrimeByDate}
 										allCrimeByMonth={this.state.allCrimeByMonth}
 										selectedSingleYear={this.state.selectedSingleYear}
-										allCrimeBySingleYearByDay={
-											this.state.allCrimeBySingleYearByDay
-										}
+										allCrimeBySingleYear={this.state.allCrimeBySingleYear}
 										setSelectedSingleYear={this.setSelectedSingleYear}
 										setSelectedSingleYearColor={this.setSelectedSingleYearColor}
-										singleYearColor={this.state.singleYearColor}
+										lineGraphColor={this.state.lineGraphColor}
 										setMonthYear={this.setMonthYear}
 										lineGraphLock={this.state.lineGraphLock}
 										singleRowLock={this.state.singleRowLock}
+										selectedSingleMonth={this.state.selectedSingleMonth}
+										allCrimeBySingleMonth={this.state.allCrimeBySingleMonth}
+										setSelectedSingeMonth={this.setSelectedSingeMonth}
 									/>
 								)}
 							/>

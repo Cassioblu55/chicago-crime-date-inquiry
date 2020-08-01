@@ -4,14 +4,14 @@ import { Row, Col } from 'react-bootstrap';
 import Numeral from 'numeral';
 import Moment from 'moment';
 import LoadingSpinner from '../LoadingSpinner';
-
+import DataTotal from '../DataTotal';
 
 import { ResponsiveLine } from '@nivo/line';
 
 class LineGraphDisplaySingleYear extends Component {
 	render() {
-    var self = this;
-    if (this.props.data !== undefined && this.props.locked === false) {
+		var self = this;
+		if (this.props.data !== undefined && this.props.locked === false) {
 			return (
 				<Container>
 					<Row style={{ height: `${this.props.graphHeight}px` }}>
@@ -78,6 +78,10 @@ class LineGraphDisplaySingleYear extends Component {
 							}}
 						/>
 					</Row>
+					<DataTotal
+						header={`All Crime Reported in ${this.props.year}`}
+						total={this.getTotal(this.props.data)}
+					/>
 				</Container>
 			);
 		} else {
@@ -85,21 +89,30 @@ class LineGraphDisplaySingleYear extends Component {
 		}
 	}
 
+	getTotal = (data) => {
+		let total = 0;
+		data.forEach(element => {
+			total += element.amount;
+		})
+
+		return total;
+	};
+
 	createDisplayData(data, year) {
-    let yearData = [];
-    data.forEach((row) =>{
-      yearData.push({
+		let yearData = [];
+		data.forEach((row) => {
+			yearData.push({
 				x: row.monthNumber,
 				y: row.amount,
 			});
-    });
-			return [
-				{
-          id: year,
-					data: yearData,
-				},
-			];
-		}
+		});
+		return [
+			{
+				id: year,
+				data: yearData,
+			},
+		];
+	}
 }
 
 export default LineGraphDisplaySingleYear;
