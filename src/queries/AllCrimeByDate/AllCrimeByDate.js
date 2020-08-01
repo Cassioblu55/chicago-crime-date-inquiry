@@ -8,10 +8,10 @@ import {
 
 export function AllCrimeByDate(callOnSuccess, callOnError) {
 	ChicagoCrimeDataApi()
-	.get(CRIMES_2001_TO_PRESENT, {
-		params: GetParams(),
-	})
-	.then(function (response) {
+		.get(CRIMES_2001_TO_PRESENT, {
+			params: GetParams(),
+		})
+		.then(function (response) {
 			const groupedData = groupCrimeByDate(response.data);
 			callOnSuccess(groupedData);
 		})
@@ -31,7 +31,7 @@ function groupCrimeByDate(data) {
 		}
 	}
 
-	return Object.keys(groupedData).map(key => {
-		return { amount: groupedData[key], date: key};
+	return Object.keys(groupedData).map((key) => {
+		return { amount: groupedData[key], date: key };
 	});
 }
