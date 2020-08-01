@@ -17,6 +17,8 @@ import { SingleYear } from './queries/SingleYear/SingleYear';
 import { SingleMonth } from './queries/SingleMonth/SingleMonth';
 import { SingleDay } from './queries/SingleDay/SingleDay';
 
+import ZoomLevel from './helpers/ZoomLevel';
+
 class App extends Component {
 	constructor() {
 		super();
@@ -35,6 +37,10 @@ class App extends Component {
 			selectedSingleMonth: undefined,
 			selectedSingleDay: undefined,
 			allCrimeBySingleDay: undefined,
+			zoomLevel: ZoomLevel.ALL,
+			perviousSelectedDay: undefined,
+			perviousSelectedYear: undefined,
+			perviousSelectedMonth: undefined,
 		};
 	}
 
@@ -144,23 +150,37 @@ class App extends Component {
 	}
 
 	setSelectedSingleYear = (year) => {
-		this.setState({ selectedSingleYear: year });
+		this.setState({
+			perviousSelectedYear:
+				this.state.selectedSingleYear || this.state.perviousSelectedYear,
+			selectedSingleYear: year,
+			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
+		});
 		this.getCrimeDataBySingleYear(year);
 	};
 
-	setSelectedSingeMonth = (month) => {
-		if (this.state.selectedSingleYear !== undefined) {
-			this.setState({ selectedSingleMonth: month });
-			this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
-		}
-	};
+	setSelectedSingleYearFromLegend = (year) => {
+		this.setState({
+			perviousSelectedYear: undefined,
+			perviousSelectedMonth: undefined,
+			perviousSelectedDay: undefined,
+			selectedSingleYear: year,
+			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
+		});
+		this.getCrimeDataBySingleYear(year);
+	}
 
 	setSelectedSingleDay = (day) => {
 		if (
 			this.state.selectedSingleYear !== undefined &&
 			this.state.selectedSingleMonth !== undefined
 		) {
-			this.setState({ selectedSingleDay: day });
+			this.setState({
+				perviousSelectedDay:
+					this.state.selectedSingleDay || this.state.perviousSelectedDay,
+				selectedSingleDay: day,
+				zoomLevel: day === undefined ? ZoomLevel.MONTH : ZoomLevel.DAY,
+			});
 			this.getCrimeDataBySingleDay(
 				this.state.selectedSingleYear,
 				this.state.selectedSingleMonth,
@@ -169,15 +189,20 @@ class App extends Component {
 		}
 	};
 
-	setLineGraphColor = (color) => {
-		this.setState({ lineGraphColor: color });
+	setSelectedSingleMonth = (month) => {
+		if (this.state.selectedSingleYear !== undefined) {
+			this.setState({
+				perviousSelectedMonth:
+					this.state.selectedSingleMonth || this.state.perviousSelectedMonth,
+				selectedSingleMonth: month,
+				zoomLevel: month === undefined ? ZoomLevel.YEAR : ZoomLevel.MONTH,
+			});
+			this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
+		}
 	};
 
-	setSelectedSingleMonth = (month) => {
-		this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
-		this.setState({
-			selectedSingleMonth: month,
-		});
+	setLineGraphColor = (color) => {
+		this.setState({ lineGraphColor: color });
 	};
 
 	render() {
@@ -221,6 +246,13 @@ class App extends Component {
 										setSelectedSingleDay={this.setSelectedSingleDay}
 										selectedSingleDay={this.state.selectedSingleDay}
 										allCrimeBySingleDay={this.state.allCrimeBySingleDay}
+										zoomLevel={this.state.zoomLevel}
+										perviousSelectedDay={this.state.perviousSelectedDay}
+										perviousSelectedYear={this.state.perviousSelectedYear}
+										perviousSelectedMonth={this.state.perviousSelectedMonth}
+										setSelectedSingleYearFromLegend={
+											this.setSelectedSingleYearFromLegend
+										}
 									/>
 								)}
 							/>

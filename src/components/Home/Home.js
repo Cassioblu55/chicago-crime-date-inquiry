@@ -16,16 +16,10 @@ import LineGraphDateSelector from '../LineGraphDateSelector/LineGraphDateSelecto
 import LineGraphDisplaySingleYear from '../LineGraphDisplaySingleYear';
 import LineGraphDisplaySingleYearMonth from '../LineGraphDisplaySingleYearMonth';
 import LineGraphDisplaySingleYearMonthDay from '../LineGraphDisplaySingleYearMonthDay/LineGraphDisplaySingleYearMonthDay';
+import ZoomLevel from '../../helpers/ZoomLevel';
 
 //CSS
 import './Home.css';
-
-const LINE_GRAPH_DISPLAY_TYPE = {
-	ALL: 'all',
-	YEAR: 'year',
-	MONTH: 'month',
-	DAY: 'day',
-};
 
 class Home extends Component {
 	getTopTenCrimeDays = (data) => {
@@ -44,15 +38,24 @@ class Home extends Component {
 		}
 	};
 
-	getLineGraphDisplay = (type) => {
-		if (this.props.selectedSingleDay !== undefined) {
-			return type === LINE_GRAPH_DISPLAY_TYPE.DAY;
-		} else if (this.props.selectedSingleMonth !== undefined) {
-			return type === LINE_GRAPH_DISPLAY_TYPE.MONTH;
-		} else if (this.props.selectedSingleYear !== undefined) {
-			return type === LINE_GRAPH_DISPLAY_TYPE.YEAR;
-		} else{
-			return type === LINE_GRAPH_DISPLAY_TYPE.ALL;
+	getLineGraphDisplay = (zoomLevel) => {
+		if (
+			this.props.selectedSingleDay !== undefined &&
+			this.props.zoomLevel === ZoomLevel.DAY
+		) {
+			return zoomLevel === ZoomLevel.DAY;
+		} else if (
+			this.props.selectedSingleMonth !== undefined &&
+			this.props.zoomLevel === ZoomLevel.MONTH
+		) {
+			return zoomLevel === ZoomLevel.MONTH;
+		} else if (
+			this.props.selectedSingleYear !== undefined &&
+			this.props.zoomLevel === ZoomLevel.YEAR
+		) {
+			return zoomLevel === ZoomLevel.YEAR;
+		} else if (this.props.zoomLevel === ZoomLevel.ALL) {
+			return zoomLevel === ZoomLevel.ALL;
 		}
 	};
 
@@ -155,16 +158,20 @@ class Home extends Component {
 				<Row>
 					<LineGraphDateSelector
 						setSelectedSingleYear={this.props.setSelectedSingleYear}
-						setSelectedSingeMonth={this.props.setSelectedSingeMonth}
+						setSelectedSingleMonth={this.props.setSelectedSingleMonth}
 						setSelectedSingleDay={this.props.setSelectedSingleDay}
+						zoomLevel={this.props.zoomLevel}
 						day={this.props.selectedSingleDay}
+						perviousSelectedDay={this.props.perviousSelectedDay}
 						year={this.props.selectedSingleYear}
+						perviousSelectedYear={this.props.perviousSelectedYear}
 						month={this.props.selectedSingleMonth}
+						perviousSelectedMonth={this.props.perviousSelectedMonth}
 						locked={this.props.lineGraphLock}
 					/>
 				</Row>
 				<Row>
-					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.DAY) && (
+					{this.getLineGraphDisplay(ZoomLevel.DAY) && (
 						<LineGraphDisplaySingleYearMonthDay
 							data={this.props.allCrimeBySingleDay}
 							year={this.props.selectedSingleYear}
@@ -177,7 +184,7 @@ class Home extends Component {
 							graphHeight={450}
 						/>
 					)}
-					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.MONTH) && (
+					{this.getLineGraphDisplay(ZoomLevel.MONTH) && (
 						<LineGraphDisplaySingleYearMonth
 							data={this.props.allCrimeBySingleMonth}
 							year={this.props.selectedSingleYear}
@@ -190,7 +197,7 @@ class Home extends Component {
 							setSelectedSingleDay={this.props.setSelectedSingleDay}
 						/>
 					)}
-					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.YEAR) && (
+					{this.getLineGraphDisplay(ZoomLevel.YEAR) && (
 						<LineGraphDisplaySingleYear
 							data={this.props.allCrimeBySingleYear}
 							year={this.props.selectedSingleYear}
@@ -202,13 +209,13 @@ class Home extends Component {
 							setSelectedSingleMonth={this.props.setSelectedSingleMonth}
 						/>
 					)}
-					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.ALL) && (
+					{this.getLineGraphDisplay(ZoomLevel.ALL) && (
 						<LineGraphDisplayAllYears
 							data={this.props.allCrimeByMonth}
 							axisLeftLegend='Crime Count'
 							axisBottomLegend='Month'
 							locked={this.props.lineGraphLock}
-							setSelectedSingleYear={this.props.setSelectedSingleYear}
+							setSelectedSingleYear={this.props.setSelectedSingleYearFromLegend}
 							setLineGraphColor={this.props.setLineGraphColor}
 							graphHeight={450}
 						/>

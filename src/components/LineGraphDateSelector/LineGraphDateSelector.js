@@ -4,40 +4,44 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { MdPlayArrow } from 'react-icons/md';
 import { IconContext } from 'react-icons';
 import Moment from 'moment';
+import ZoomLevel from '../../helpers/ZoomLevel';
 
 class LineGraphDateSelector extends Component {
-	constructor() {
-		super();
-		this.state = {
-			perviousSelectedYear: undefined,
-			perviousSelectedMonth: undefined,
-			perviousSelectedDay: undefined,
-		};
-	}
-
 	zoomOut = () => {
-		if (this.props.day !== undefined) {
-			this.setState({ perviousSelectedDay: this.props.day });
+		if (
+			this.props.day !== undefined &&
+			this.props.zoomLevel === ZoomLevel.DAY
+		) {
 			this.setSelectedSingleDay(undefined);
-		} else if (this.props.month !== undefined) {
-			this.setState({ perviousSelectedMonth: this.props.month });
-			this.setSelectedSingeMonth(undefined);
-		} else if (this.props.year !== undefined) {
-			this.setState({ perviousSelectedYear: this.props.year });
+		} else if (
+			this.props.month !== undefined &&
+			this.props.zoomLevel === ZoomLevel.MONTH
+		) {
+			this.setSelectedSingleMonth(undefined);
+		} else if (
+			this.props.year !== undefined &&
+			this.props.zoomLevel === ZoomLevel.YEAR
+		){
 			this.setSelectedSingleYear(undefined);
 		}
 	};
 
 	zoomIn = () => {
-		if (this.state.perviousSelectedDay !== undefined) {
-			this.setSelectedSingleDay(this.state.perviousSelectedDay);
-			this.setState({ perviousSelectedDay: undefined });
-		} else if (this.state.perviousSelectedMonth !== undefined) {
-			this.setSelectedSingeMonth(this.state.perviousSelectedMonth);
-			this.setState({ perviousSelectedMonth: undefined });
-		} else if (this.state.perviousSelectedYear !== undefined) {
-			this.setSelectedSingleYear(this.state.perviousSelectedYear);
-			this.setState({ perviousSelectedYear: undefined });
+		if (
+			this.props.perviousSelectedDay !== undefined &&
+			this.props.zoomLevel === ZoomLevel.MONTH
+		) {
+			this.setSelectedSingleDay(this.props.perviousSelectedDay);
+		} else if (
+			this.props.perviousSelectedMonth !== undefined &&
+			this.props.zoomLevel === ZoomLevel.YEAR
+		) {
+			this.setSelectedSingleMonth(this.props.perviousSelectedMonth);
+		} else if (
+			this.props.perviousSelectedYear !== undefined &&
+			this.props.zoomLevel === ZoomLevel.ALL
+		) {
+			this.setSelectedSingleYear(this.props.perviousSelectedYear);
 		}
 	};
 
@@ -45,8 +49,8 @@ class LineGraphDateSelector extends Component {
 		this.props.setSelectedSingleYear(year);
 	};
 
-	setSelectedSingeMonth = (month) => {
-		this.props.setSelectedSingeMonth(month);
+	setSelectedSingleMonth = (month) => {
+		this.props.setSelectedSingleMonth(month);
 	};
 
 	setSelectedSingleDay = (day) => {
@@ -56,6 +60,7 @@ class LineGraphDateSelector extends Component {
 	getZoomOutLock = () => {
 		return (
 			this.props.locked ||
+			this.props.zoomLevel === ZoomLevel.ALL ||
 			(this.props.day &&
 				this.props.month === undefined &&
 				this.props.year === undefined)
@@ -65,9 +70,16 @@ class LineGraphDateSelector extends Component {
 	getZoomInLock = () => {
 		return (
 			this.props.locked ||
-			(this.state.perviousSelectedDay === undefined &&
-				this.state.perviousSelectedYear === undefined &&
-				this.state.perviousSelectedMonth === undefined)
+			this.props.zoomLevel === ZoomLevel.DAY ||
+			(this.props.perviousSelectedDay === undefined &&
+				this.props.zoomLevel === ZoomLevel.MONTH) ||
+			(this.props.perviousSelectedMonth === undefined &&
+				this.props.zoomLevel === ZoomLevel.YEAR) ||
+			(this.props.perviousSelectedYear === undefined &&
+				this.props.zoomLevel === ZoomLevel.ALL) ||
+			(this.props.perviousSelectedDay === undefined &&
+				this.props.perviousSelectedYear === undefined &&
+				this.props.perviousSelectedMonth === undefined)
 		);
 	};
 
