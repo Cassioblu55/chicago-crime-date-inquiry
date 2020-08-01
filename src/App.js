@@ -13,6 +13,7 @@ import Home from './components/Home';
 import { AllCrimeByTypeFromSingleDate } from './queries/AllCrimeByTypeFromSingleDate/AllCrimeByTypeFromSingleDate';
 import { AllCrimeByDate } from './queries/AllCrimeByDate/AllCrimeByDate';
 import { AllCrimeByMonth } from './queries/AllCrimeByMonth/AllCrimeByMonth';
+import { SingleYear } from './queries/SingleYear/SingleYear';
 
 class App extends Component {
 	constructor() {
@@ -23,6 +24,9 @@ class App extends Component {
 			allCrimeByDate: undefined,
 			dateChangerLocked: false,
 			allCrimeByMonth: undefined,
+			selectedSingleYear: undefined,
+			allCrimeBySingleYearByDay: undefined,
+			singleYearColor: undefined,
 		};
 	}
 
@@ -39,13 +43,28 @@ class App extends Component {
 	};
 
 	getAllCrimeByTypeFromSingleDate = (date) => {
-		let self = this;
 		this.setState({ dateChangerLocked: true });
+		let self = this;
 		AllCrimeByTypeFromSingleDate(
 			date,
 			function (results) {
 				self.setState({
 					allCrimeByTypeFromSingleDateData: results,
+					dateChangerLocked: false,
+				});
+			},
+			this.callOnErrorDefault
+		);
+	};
+
+	getCrimeDataBySingleYear = (year) => {
+		this.setState({ dateChangerLocked: true });
+		let self = this;
+		SingleYear(
+			year,
+			function (results) {
+				self.setState({
+					allCrimeBySingleYearByDay: results,
 					dateChangerLocked: false,
 				});
 			},
@@ -67,12 +86,22 @@ class App extends Component {
 		}, this.callOnErrorDefault);
 	}
 
-	getAllCrimeByMonth(){
+	getAllCrimeByMonth() {
 		let self = this;
 		AllCrimeByMonth(function (results) {
 			self.setState({ allCrimeByMonth: results });
 		}, this.callOnErrorDefault);
 	}
+
+	setSelectedSingleYear = (year) => {
+		this.setState({ selectedSingleYear: year });
+		this.getCrimeDataBySingleYear(year);
+	};
+
+	setSelectedSingleYearColor = (color) => {
+		console.log(color);
+		this.setState({ singleYearColor: color });
+	};
 
 	render() {
 		return (
@@ -101,6 +130,13 @@ class App extends Component {
 										}
 										allCrimeByDate={this.state.allCrimeByDate}
 										allCrimeByMonth={this.state.allCrimeByMonth}
+										selectedSingleYear={this.state.selectedSingleYear}
+										allCrimeBySingleYearByDay={
+											this.state.allCrimeBySingleYearByDay
+										}
+										setSelectedSingleYear={this.setSelectedSingleYear}
+										setSelectedSingleYearColor={this.setSelectedSingleYearColor}
+										singleYearColor={this.state.singleYearColor}
 									/>
 								)}
 							/>

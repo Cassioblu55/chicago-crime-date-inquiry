@@ -27,7 +27,7 @@ class DateChanger extends Component {
 	render() {
 		return (
 			<Container>
-				<Row>
+				<Row className='justify-content-center'>
 					<Col>
 						<Button
 							variant='dark'
@@ -41,15 +41,16 @@ class DateChanger extends Component {
 							</IconContext.Provider>
 						</Button>
 					</Col>
-					<Col>
-						<DatePicker
-							value={this.props.date}
-							onChange={this.props.setDate}
-							disabled={this.props.locked}
-						/>
+					<Col style={{ paddingLeft: '20%' }}>
+							<DatePicker
+								value={this.props.date}
+								onChange={this.props.setDate}
+								disabled={this.props.locked}
+							/>
 					</Col>
 					<Col>
 						<Button
+							className='float-right'
 							variant='dark'
 							onClick={this.addDay}
 							disabled={this.props.locked}>

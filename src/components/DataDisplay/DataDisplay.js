@@ -24,9 +24,9 @@ class DataDisplay extends Component {
 						return (
 							<DataDisplayRow
 								rowClass={this.getSelected(row)}
-                key={index}
-                index={index+1}
-								loading={this.props.dateChangerLocked}
+								key={index}
+								index={index + 1}
+								loading={this.props.loading}
 								onClick={this.props.onClick}
 								onClickDataSend={this.props.onClickDataSend}
 								data={row}

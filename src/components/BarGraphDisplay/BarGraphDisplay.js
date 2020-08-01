@@ -2,31 +2,7 @@ import React, { Component } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { Container, Row } from 'react-bootstrap';
 import './BarGraphDisplay.css';
-
-const COLORS = [
-	'#8783D1',
-	'#AA9ABA',
-	'#BFA4A4',
-	'#D1ABAD',
-	'#E3B9BC',
-	'#A63A50',
-	'#012622',
-	'#012622',
-	'#003B36',
-	'#59114D',
-	'#42033D',
-];
-
-const getBarColor = (bar) => {
-	if (bar.index < COLORS.length) {
-		return COLORS[bar.index];
-	}
-	let offSet = COLORS.length;
-	while (bar.index - offSet >= COLORS.length) {
-		offSet += COLORS.length;
-	}
-	return COLORS[bar.index - offSet];
-};
+import GetColor from '../../helpers/GetColor';
 
 class BarGraphDisplay extends Component {
 	render() {
@@ -43,7 +19,7 @@ class BarGraphDisplay extends Component {
 							indexBy='keyDisplay'
 							margin={{ top: 10, right: 130, bottom: 70, left: 60 }}
 							padding={0.3}
-							colors={getBarColor}
+							colors={GetColor}
 							borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
 							axisTop={null}
 							axisRight={null}
