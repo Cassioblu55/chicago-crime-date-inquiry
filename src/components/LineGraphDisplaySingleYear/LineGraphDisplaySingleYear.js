@@ -3,21 +3,19 @@ import Container from 'react-bootstrap/Container';
 import { Row, Col } from 'react-bootstrap';
 import Numeral from 'numeral';
 import Moment from 'moment';
+import LoadingSpinner from '../LoadingSpinner';
+
 
 import { ResponsiveLine } from '@nivo/line';
 
 class LineGraphDisplaySingleYear extends Component {
 	render() {
 		if (this.props.data !== undefined) {
-			let self = this;
 			return (
 				<Container>
-					<Row style={{ height: '450px' }}>
+					<Row style={{ height: `${this.props.graphHeight}px` }}>
 						<ResponsiveLine
-							data={this.createDisplayData(
-								this.props.data,
-								this.props.year
-						)}
+							data={this.createDisplayData(this.props.data, this.props.year)}
 							margin={{ top: 10, right: 50, bottom: 50, left: 60 }}
 							xScale={{ type: 'point' }}
 							yScale={{
@@ -79,7 +77,7 @@ class LineGraphDisplaySingleYear extends Component {
 				</Container>
 			);
 		} else {
-			return <div />;
+			return <LoadingSpinner height={this.props.graphHeight} />;
 		}
 	}
 

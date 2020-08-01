@@ -101,6 +101,7 @@ class Home extends Component {
 						data={this.props.mainGraphData}
 						axisBottomLegend='Crime Type'
 						axisLeftLegend='Crime Count'
+						graphHeight={400}
 						locked={this.props.dateChangerLocked}
 					/>
 				</Row>
@@ -115,6 +116,7 @@ class Home extends Component {
 							onClick={this.setDateByDataDisplay}
 							onClickDataSend={['left']}
 							loading={this.props.dateChangerLocked}
+							loadingContainerHeight={330}
 							rowSelectedData={{
 								left: Moment(
 									this.props.allCrimeByTypeFromSingleDate,
@@ -130,6 +132,7 @@ class Home extends Component {
 							onClick={this.setDateByDataDisplay}
 							onClickDataSend={['left']}
 							loading={this.props.dateChangerLocked}
+							loadingContainerHeight={330}
 							rowSelectedData={{
 								left: Moment(
 									this.props.allCrimeByTypeFromSingleDate,
@@ -153,6 +156,7 @@ class Home extends Component {
 							data={this.props.allCrimeBySingleYearByDay}
 							year={this.props.selectedSingleYear}
 							color={this.props.singleYearColor}
+							graphHeight={450}
 						/>
 					)}
 					{this.props.selectedSingleYear === undefined && (
@@ -162,6 +166,7 @@ class Home extends Component {
 							axisBottomLegend='Month'
 							setSelectedSingleYear={this.props.setSelectedSingleYear}
 							setSelectedSingleYearColor={this.props.setSelectedSingleYearColor}
+							graphHeight={450}
 						/>
 					)}
 				</Row>
