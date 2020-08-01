@@ -4,12 +4,15 @@ import { Container, Row } from 'react-bootstrap';
 import './BarGraphDisplay.css';
 import GetColor from '../../helpers/GetColor';
 import LoadingSpinner from '../LoadingSpinner';
+import DataTotal from '../DataTotal';
+import Numeral from 'numeral';
+
 class BarGraphDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
 			return (
 				<Container>
-					<h3 className='text-center'>{this.props.header}</h3>
+					<h3 className='text-center'>{`All Crimes Reported on ${this.props.displayDate}`}</h3>
 					<Row
 						style={{ height: this.props.graphHeight }}
 						className={this.props.locked && 'graphLoading'}>
@@ -47,11 +50,23 @@ class BarGraphDisplay extends Component {
 							motionDamping={15}
 						/>
 					</Row>
+					<DataTotal
+						header={`Total Crime Reported on ${this.props.displayDate}`}
+						total={this.getTotal(this.props.data)}
+					/>
 				</Container>
 			);
 		} else {
 			return <LoadingSpinner height={this.props.graphHeight} />;
 		}
+	}
+
+	getTotal= (data) => {
+		let total = 0;
+		for (let key of Object.keys(data)) {
+			total += data[key];
+		}
+		return total;
 	}
 
 	createDisplayData = (data) => {

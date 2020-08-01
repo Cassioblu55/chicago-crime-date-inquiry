@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import LoadingSpinner from '../LoadingSpinner';
+import Container from 'react-bootstrap/Container';
+import { Row, Col } from 'react-bootstrap';
 import { ResponsiveLine } from '@nivo/line';
-import Moment from 'moment';
 import Numeral from 'numeral';
+import Moment from 'moment';
+import Ordinal from 'ordinal';
 import DataTotal from '../DataTotal';
 
-import GetColor from '../../helpers/GetColor';
-import LoadingSpinner from '../LoadingSpinner';
-
-import './LineGraphDisplayAllYears.css';
-
-class LineGraphDisplayAllYears extends Component {
-	render = () => {
-		if (this.props.locked === false && this.props.data !== undefined) {
-			let self = this;
+class LineGraphDisplaySingleYearMonth extends Component {
+	render() {
+		var self = this;
+		if (this.props.data !== undefined && this.props.locked === false) {
 			return (
 				<Container>
 					<Row style={{ height: `${this.props.graphHeight}px` }}>
 						<ResponsiveLine
-							data={this.createDisplayData(this.props.data)}
-							margin={{ top: 10, right: 110, bottom: 50, left: 60 }}
+							data={this.createDisplayData(
+								this.props.data,
+								this.props.year,
+								this.props.month
+							)}
+							margin={{ top: 10, right: 50, bottom: 50, left: 60 }}
 							xScale={{ type: 'point' }}
 							yScale={{
 								type: 'linear',
@@ -48,7 +50,7 @@ class LineGraphDisplayAllYears extends Component {
 								legendOffset: -50,
 								legendPosition: 'middle',
 							}}
-							colors={GetColor}
+							colors={this.props.color}
 							pointSize={10}
 							pointColor={{ theme: 'background' }}
 							pointBorderWidth={2}
@@ -67,48 +69,27 @@ class LineGraphDisplayAllYears extends Component {
 											</Col>
 										</Row>
 										<Row>
-											<Col>{Moment(point.data.x, 'MM').format('MMM')}</Col>
-											<Col>{Numeral(point.data.y).format('0,0')}</Col>
+											<Col xs={9}>{`${Moment(
+												`${self.props.year}-${self.props.month}-${point.data.x}`,
+												'YYYY-MM-DD'
+											).format('dddd')} the ${Ordinal(point.data.x)}`}</Col>
+											<Col xs={3}>{Numeral(point.data.y).format('0,0')}</Col>
 										</Row>
 									</Container>
 								);
 							}}
 							pointLabelYOffset={-12}
 							useMesh={true}
-							legends={[
-								{
-									anchor: 'bottom-right',
-									direction: 'column',
-									justify: false,
-									translateX: 100,
-									translateY: 35,
-									itemsSpacing: 0,
-									itemDirection: 'left-to-right',
-									itemWidth: 80,
-									itemHeight: 20,
-									itemOpacity: 0.75,
-									symbolSize: 12,
-									symbolShape: 'circle',
-									symbolBorderColor: 'rgba(0, 0, 0, .5)',
-									onClick: function (data) {
-										self.props.setSelectedSingleYear(data.id);
-										self.props.setSelectedSingleYearColor(data.color);
-									},
-									effects: [
-										{
-											on: 'hover',
-											style: {
-												itemBackground: 'rgba(0, 0, 0, .03)',
-												itemOpacity: 1,
-											},
-										},
-									],
-								},
-							]}
+							onClick={function (point) {
+								//self.props.setSingleDay(point);
+							}}
 						/>
 					</Row>
 					<DataTotal
-						header='All Crime Reported'
+						header={`${Moment(
+							`${self.props.year}-${self.props.month}`,
+							'YYYY-MM'
+						).format('MMMM YYYY')} Crimes`}
 						total={this.getTotal(this.props.data)}
 					/>
 				</Container>
@@ -116,31 +97,32 @@ class LineGraphDisplayAllYears extends Component {
 		} else {
 			return <LoadingSpinner height={this.props.graphHeight} />;
 		}
-	};
-
-	getTotal(data) {
-		let total = 0;
-		data.forEach((element) => {
-			element.data.forEach((e) => {
-				total += e.amount;
-			});
-		});
-		return total;
 	}
 
-	createDisplayData(data) {
-		return data.map((row, index) => {
-			return {
-				id: row.id,
-				index: index,
-				data: row.data
-					.sort((a, b) => (a.month < b.month ? -1 : 1))
-					.map((month) => {
-						return { x: month.month, y: month.amount };
-					}),
-			};
+	getTotal = (data) => {
+		let total = 0;
+		console.log(data);
+		data.forEach((element) => {
+			total += element.amount;
 		});
+		return total;
+	};
+
+	createDisplayData(data, year, month) {
+		let yearData = [];
+		data.forEach((row) => {
+			yearData.push({
+				x: row.dayNumber,
+				y: row.amount,
+			});
+		});
+		return [
+			{
+				id: Moment(`${year}-${month}`, 'YYYY-MM').format('MMM-YYYY'),
+				data: yearData,
+			},
+		];
 	}
 }
 
-export default LineGraphDisplayAllYears;
+export default LineGraphDisplaySingleYearMonth;
