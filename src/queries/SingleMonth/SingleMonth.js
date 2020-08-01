@@ -6,8 +6,6 @@ import {
 	CRIMES_2001_TO_PRESENT,
 } from '../../api/ChicagoCrimeDataApi';
 
-import Moment from 'moment';
-
 export function SingleMonth(year, month, callOnSuccess, callOnError) {
 	if (year !== undefined && month !== undefined) {
 		ChicagoCrimeDataApi()
@@ -24,7 +22,7 @@ export function SingleMonth(year, month, callOnSuccess, callOnError) {
 	}
 }
 
-function getCrimeData(data, year, month) {
+function getCrimeData(data) {
 	let groupedData = {};
 	data = data.map((row) => {
 		return { ...row, date: row.date.substring(8, 10) };

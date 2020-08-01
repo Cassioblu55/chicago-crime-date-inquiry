@@ -92,7 +92,7 @@ class LineGraphDisplayAllYears extends Component {
 									symbolBorderColor: 'rgba(0, 0, 0, .5)',
 									onClick: function (data) {
 										self.props.setSelectedSingleYear(data.id);
-										self.props.setSelectedSingleYearColor(data.color);
+										self.props.setLineGraphColor(data.color);
 									},
 									effects: [
 										{
