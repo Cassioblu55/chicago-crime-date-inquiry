@@ -5,6 +5,7 @@ import Moment from 'moment';
 import Numeral from 'numeral';
 
 import GetColor from '../../helpers/GetColor';
+import LoadingSpinner from '../LoadingSpinner';
 
 import './LineGraphDisplayAllYears.css';
 
@@ -14,7 +15,7 @@ class LineGraphDisplayAllYears extends Component {
 			let self = this;
 			return (
 				<Container>
-					<Row style={{ height: '450px' }}>
+					<Row style={{ height: `${this.props.graphHeight}px` }}>
 						<ResponsiveLine
 							data={this.createDisplayData(this.props.data)}
 							margin={{ top: 10, right: 110, bottom: 50, left: 60 }}
@@ -108,7 +109,7 @@ class LineGraphDisplayAllYears extends Component {
 				</Container>
 			);
 		} else {
-			return <div />;
+			return <LoadingSpinner height={this.props.graphHeight} />;
 		}
 	};
 

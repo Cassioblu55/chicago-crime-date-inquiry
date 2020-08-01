@@ -3,6 +3,7 @@ import './DataDisplay.css';
 
 import Container from 'react-bootstrap/Container';
 import DataDisplayRow from './DataDisplayRow';
+import LoadingSpinner from '../LoadingSpinner';
 
 class DataDisplay extends Component {
 	getSelected(row){
@@ -36,7 +37,7 @@ class DataDisplay extends Component {
 				</Container>
 			);
 		} else {
-			return <div></div>;
+			return <LoadingSpinner height={this.props.loadingContainerHeight} />;
 		}
 	}
 }

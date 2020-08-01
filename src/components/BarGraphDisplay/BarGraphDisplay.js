@@ -3,7 +3,7 @@ import { ResponsiveBar } from '@nivo/bar';
 import { Container, Row } from 'react-bootstrap';
 import './BarGraphDisplay.css';
 import GetColor from '../../helpers/GetColor';
-
+import LoadingSpinner from '../LoadingSpinner';
 class BarGraphDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
@@ -11,7 +11,7 @@ class BarGraphDisplay extends Component {
 				<Container>
 					<h3 className='text-center'>{this.props.header}</h3>
 					<Row
-						style={{ height: '400px' }}
+						style={{ height: this.props.graphHeight }}
 						className={this.props.locked && 'graphLoading'}>
 						<ResponsiveBar
 							data={this.createDisplayData(this.props.data)}
@@ -50,7 +50,7 @@ class BarGraphDisplay extends Component {
 				</Container>
 			);
 		} else {
-			return <div></div>;
+			return <LoadingSpinner height={this.props.graphHeight} />;
 		}
 	}
 
