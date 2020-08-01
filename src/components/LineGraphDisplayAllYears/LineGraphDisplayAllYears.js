@@ -11,7 +11,7 @@ import './LineGraphDisplayAllYears.css';
 
 class LineGraphDisplayAllYears extends Component {
 	render = () => {
-		if (this.props.data !== undefined) {
+		if (this.props.locked === false && this.props.data !== undefined) {
 			let self = this;
 			return (
 				<Container>

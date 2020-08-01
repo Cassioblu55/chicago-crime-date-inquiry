@@ -17,7 +17,7 @@ class DataDisplayRow extends Component {
 			<Container>
 				<Row
 					className={`dataDisplayRow ${this.props.rowClass} ${
-						this.props.loading ? 'dataDisplayRowLoading' : 'dataDisplayRowReady'
+						this.props.locked ? 'dataDisplayRowLoading' : 'dataDisplayRowReady'
 					}`}
 					onClick={this.onClick}>
 					<Col sm={9} md='auto' className='text-left'>

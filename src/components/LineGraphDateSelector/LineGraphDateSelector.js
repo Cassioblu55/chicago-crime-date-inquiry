@@ -35,8 +35,7 @@ class LineGraphDateSelector extends Component {
 							variant='dark'
 							onClick={this.zoomOut}
 							disabled={
-								this.props.selectedSingleYear === undefined ||
-								this.props.loading
+								this.props.selectedSingleYear === undefined || this.props.locked
 							}>
 							<IconContext.Provider
 								value={{
@@ -55,7 +54,7 @@ class LineGraphDateSelector extends Component {
 							variant='dark'
 							onClick={this.zoomIn}
 							disabled={
-								this.props.loading ||
+								this.props.locked ||
 								this.state.perviousSelectedSingleYear === undefined ||
 								this.props.selectedSingleYear !== undefined
 							}>

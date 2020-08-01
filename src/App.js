@@ -14,6 +14,7 @@ import { AllCrimeByTypeFromSingleDate } from './queries/AllCrimeByTypeFromSingle
 import { AllCrimeByDate } from './queries/AllCrimeByDate/AllCrimeByDate';
 import { AllCrimeByMonth } from './queries/AllCrimeByMonth/AllCrimeByMonth';
 import { SingleYear } from './queries/SingleYear/SingleYear';
+import { MdTurnedIn } from 'react-icons/md';
 
 class App extends Component {
 	constructor() {
@@ -22,7 +23,9 @@ class App extends Component {
 			allCrimeByTypeFromSingleDate: new Date(),
 			allCrimeByTypeFromSingleDateData: undefined,
 			allCrimeByDate: undefined,
-			dateChangerLocked: false,
+			barGraphLocked: false,
+			singleRowLock: false,
+			lineGraphLock: false,
 			allCrimeByMonth: undefined,
 			selectedSingleYear: undefined,
 			allCrimeBySingleYearByDay: undefined,
@@ -43,14 +46,15 @@ class App extends Component {
 	};
 
 	getAllCrimeByTypeFromSingleDate = (date) => {
-		this.setState({ dateChangerLocked: true });
+		this.setState({ singleRowLock: true, barGraphLocked: true });
 		let self = this;
 		AllCrimeByTypeFromSingleDate(
 			date,
 			function (results) {
 				self.setState({
 					allCrimeByTypeFromSingleDateData: results,
-					dateChangerLocked: false,
+					singleRowLock: false,
+					barGraphLocked: false,
 				});
 			},
 			this.callOnErrorDefault
@@ -59,14 +63,14 @@ class App extends Component {
 
 	getCrimeDataBySingleYear = (year) => {
 		if (year !== undefined) {
-			this.setState({ dateChangerLocked: true });
+			this.setState({ lineGraphLock: true });
 			let self = this;
 			SingleYear(
 				year,
 				function (results) {
 					self.setState({
 						allCrimeBySingleYearByDay: results,
-						dateChangerLocked: false,
+						lineGraphLock: false,
 					});
 				},
 				this.callOnErrorDefault
@@ -83,22 +87,18 @@ class App extends Component {
 
 	getAllCrimeByDate() {
 		let self = this;
-		AllCrimeByDate(
-			function (results) {
-				self.setState({ allCrimeByDate: results });
-			},
-			this.callOnErrorDefault
-		);
+		this.setState({ lineGraphLock: true });
+		AllCrimeByDate(function (results) {
+			self.setState({ allCrimeByDate: results, lineGraphLock: false });
+		}, this.callOnErrorDefault);
 	}
 
 	getAllCrimeByMonth() {
 		let self = this;
-		AllCrimeByMonth(
-			function (results) {
-				self.setState({ allCrimeByMonth: results });
-			},
-			this.callOnErrorDefault
-		);
+		this.setState({ lineGraphLock: true });
+		AllCrimeByMonth(function (results) {
+			self.setState({ allCrimeByMonth: results, lineGraphLock: true });
+		}, this.callOnErrorDefault);
 	}
 
 	setSelectedSingleYear = (year) => {
@@ -131,7 +131,7 @@ class App extends Component {
 								path='/home'
 								render={() => (
 									<Home
-										dateChangerLocked={this.state.dateChangerLocked}
+										barGraphLocked={this.state.barGraphLocked}
 										mainGraphData={this.state.allCrimeByTypeFromSingleDateData}
 										allCrimeByTypeFromSingleDate={
 											this.state.allCrimeByTypeFromSingleDate
@@ -149,6 +149,8 @@ class App extends Component {
 										setSelectedSingleYearColor={this.setSelectedSingleYearColor}
 										singleYearColor={this.state.singleYearColor}
 										setMonthYear={this.setMonthYear}
+										lineGraphLock={this.state.lineGraphLock}
+										singleRowLock={this.state.singleRowLock}
 									/>
 								)}
 							/>

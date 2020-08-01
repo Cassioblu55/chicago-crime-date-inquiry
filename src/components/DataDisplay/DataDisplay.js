@@ -6,20 +6,20 @@ import DataDisplayRow from './DataDisplayRow';
 import LoadingSpinner from '../LoadingSpinner';
 
 class DataDisplay extends Component {
-	getSelected(row){
-    let dataMatches = true;
-    for(let key of Object.keys(this.props.rowSelectedData)){
-      if(row[key] !== this.props.rowSelectedData[key]){
-        dataMatches = false;
-      }
-    }
-    return dataMatches ? "rowSelected" : '';
-  };
+	getSelected(row) {
+		let dataMatches = true;
+		for (let key of Object.keys(this.props.rowSelectedData)) {
+			if (row[key] !== this.props.rowSelectedData[key]) {
+				dataMatches = false;
+			}
+		}
+		return dataMatches ? 'rowSelected' : '';
+	}
 
 	render() {
 		if (this.props.data !== undefined) {
 			return (
-				<Container style={{"marginBottom": "15px"}}>
+				<Container style={{ marginBottom: '15px' }}>
 					<h6 className='text-center dataDisplayHeader'>{this.props.header}</h6>
 					{this.props.data.map((row, index) => {
 						return (
@@ -27,7 +27,7 @@ class DataDisplay extends Component {
 								rowClass={this.getSelected(row)}
 								key={index}
 								index={index + 1}
-								loading={this.props.loading}
+								locked={this.props.locked}
 								onClick={this.props.onClick}
 								onClickDataSend={this.props.onClickDataSend}
 								data={row}

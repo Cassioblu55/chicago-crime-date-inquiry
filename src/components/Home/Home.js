@@ -93,7 +93,7 @@ class Home extends Component {
 				<DateChanger
 					date={this.props.allCrimeByTypeFromSingleDate}
 					setDate={this.props.setAllCrimeByTypeFromSingleDate}
-					locked={this.props.dateChangerLocked}
+					locked={this.props.barGraphLocked}
 				/>
 				<Row>
 					<BarGraphDisplay
@@ -102,7 +102,7 @@ class Home extends Component {
 						axisBottomLegend='Crime Type'
 						axisLeftLegend='Crime Count'
 						graphHeight={400}
-						locked={this.props.dateChangerLocked}
+						locked={this.props.barGraphLocked}
 					/>
 				</Row>
 				<Row className={'crimeTotal'}>
@@ -115,7 +115,7 @@ class Home extends Component {
 							header='Days with Most Crime'
 							onClick={this.setDateByDataDisplay}
 							onClickDataSend={['left']}
-							loading={this.props.dateChangerLocked}
+							locked={this.props.singleRowLock}
 							loadingContainerHeight={330}
 							rowSelectedData={{
 								left: Moment(
@@ -131,7 +131,7 @@ class Home extends Component {
 							header='Days with Least Crime'
 							onClick={this.setDateByDataDisplay}
 							onClickDataSend={['left']}
-							loading={this.props.dateChangerLocked}
+							locked={this.props.singleRowLock}
 							loadingContainerHeight={330}
 							rowSelectedData={{
 								left: Moment(
@@ -146,7 +146,7 @@ class Home extends Component {
 					<LineGraphDateSelector
 						header={this.getLineGraphHeader(this.props.selectedSingleYear)}
 						setSelectedSingleYear={this.props.setSelectedSingleYear}
-						loading={this.props.dateChangerLocked}
+						locked={this.props.lineGraphLock}
 						selectedSingleYear={this.props.selectedSingleYear}
 					/>
 				</Row>
@@ -156,7 +156,7 @@ class Home extends Component {
 							data={this.props.allCrimeBySingleYearByDay}
 							year={this.props.selectedSingleYear}
 							color={this.props.singleYearColor}
-							loading={this.props.dateChangerLocked}
+							locked={this.props.lineGraphLock}
 							graphHeight={450}
 							setMonthYear={this.props.setMonthYear}
 						/>
@@ -166,6 +166,7 @@ class Home extends Component {
 							data={this.props.allCrimeByMonth}
 							axisLeftLegend='Crime Count'
 							axisBottomLegend='Month'
+							locked={this.props.lineGraphLock}
 							setSelectedSingleYear={this.props.setSelectedSingleYear}
 							setSelectedSingleYearColor={this.props.setSelectedSingleYearColor}
 							graphHeight={450}
