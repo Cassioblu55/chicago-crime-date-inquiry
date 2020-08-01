@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 
-//BOOTSTRAP COMPONENTS
+//NPM COMPONENTS
 import Container from 'react-bootstrap/Container';
 import { Row, Col } from 'react-bootstrap';
-
-//COMPONENTS
-import GraphDisplay from '../GraphDisplay';
-import DataDisplay from '../DataDisplay';
-import DateChanger from '../DateChanger';
 import DateFormat from 'date-format';
 import Numeral from 'numeral';
 import Moment from 'moment';
+
+//CUSTOM COMPONENTS
+import BarGraphDisplay from '../BarGraphDisplay/BarGraphDisplay';
+import DataDisplay from '../DataDisplay';
+import DateChanger from '../DateChanger';
+import LineGraphDisplay from '../LineGraphDisplay';
 
 //CSS
 import './Home.css';
@@ -85,7 +86,7 @@ class Home extends Component {
 					locked={this.props.dateChangerLocked}
 				/>
 				<Row>
-					<GraphDisplay
+					<BarGraphDisplay
 						header={`All Crimes Reported on ${dateDisplay}`}
 						data={this.props.mainGraphData}
 						axisBottomLegend='Crime Type'
@@ -127,6 +128,14 @@ class Home extends Component {
 							}}
 						/>
 					</Col>
+				</Row>
+				<Row>
+					<LineGraphDisplay
+						header='Crimes by Year'
+						data={this.props.allCrimeByMonth}
+						axisLeftLegend='Crime Count'
+						axisBottomLegend='Month'
+					/>
 				</Row>
 			</Container>
 		);

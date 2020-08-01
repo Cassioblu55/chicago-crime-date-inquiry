@@ -8,12 +8,11 @@ import { Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 //COMPONENTS
 import Header from './components/Header/Header';
 import Home from './components/Home';
-import Search from './components/Search';
 
 //QUERY HELPERS
 import { AllCrimeByTypeFromSingleDate } from './queries/AllCrimeByTypeFromSingleDate/AllCrimeByTypeFromSingleDate';
-
 import { AllCrimeByDate } from './queries/AllCrimeByDate/AllCrimeByDate';
+import { AllCrimeByMonth } from './queries/AllCrimeByMonth/AllCrimeByMonth';
 
 class App extends Component {
 	constructor() {
@@ -23,6 +22,7 @@ class App extends Component {
 			allCrimeByTypeFromSingleDateData: undefined,
 			allCrimeByDate: undefined,
 			dateChangerLocked: false,
+			allCrimeByMonth: undefined,
 		};
 	}
 
@@ -31,6 +31,7 @@ class App extends Component {
 			this.state.allCrimeByTypeFromSingleDate
 		);
 		this.getAllCrimeByDate();
+		this.getAllCrimeByMonth();
 	}
 
 	callOnErrorDefault = (error) => {
@@ -53,7 +54,6 @@ class App extends Component {
 	};
 
 	setAllCrimeByTypeFromSingleDate = (date) => {
-		console.log(date);
 		this.setState({
 			allCrimeByTypeFromSingleDate: date,
 		});
@@ -67,9 +67,21 @@ class App extends Component {
 		}, this.callOnErrorDefault);
 	}
 
+	getAllCrimeByMonth(){
+		let self = this;
+		AllCrimeByMonth(function (results) {
+			self.setState({ allCrimeByMonth: results });
+		}, this.callOnErrorDefault);
+	}
+
 	render() {
 		return (
-			<Container className={this.state.dateChangerLocked && 'anyGraphsLoading'}>
+			<Container
+				className={
+					this.state.dateChangerLocked
+						? 'anyGraphsLoading mainAppContainer'
+						: 'mainAppContainer'
+				}>
 				<HashRouter basename='/'>
 					<Header />
 					<main>
@@ -88,6 +100,7 @@ class App extends Component {
 											this.setAllCrimeByTypeFromSingleDate
 										}
 										allCrimeByDate={this.state.allCrimeByDate}
+										allCrimeByMonth={this.state.allCrimeByMonth}
 									/>
 								)}
 							/>

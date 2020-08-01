@@ -18,14 +18,14 @@ class DataDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
 			return (
-				<Container>
+				<Container style={{"marginBottom": "15px"}}>
 					<h6 className='text-center dataDisplayHeader'>{this.props.header}</h6>
 					{this.props.data.map((row, index) => {
 						return (
 							<DataDisplayRow
 								rowClass={this.getSelected(row)}
                 key={index}
-                index={index}
+                index={index+1}
 								loading={this.props.dateChangerLocked}
 								onClick={this.props.onClick}
 								onClickDataSend={this.props.onClickDataSend}

@@ -1,3 +1,7 @@
 .anyGraphsLoading{
     cursor: progress;
 }
+
+.mainAppContainer{
+    padding-bottom: 50px;
+}

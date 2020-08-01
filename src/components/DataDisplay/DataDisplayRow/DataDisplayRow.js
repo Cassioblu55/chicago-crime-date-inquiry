@@ -19,7 +19,7 @@ class DataDisplayRow extends Component {
 					this.props.loading ? 'dataDisplayRowLoading' : 'dataDisplayRowReady'
 				}`}
 				onClick={this.onClick}>
-				<Col className='text-left'>{this.props.index+1}. {this.props.data.left}</Col>
+				<Col className='text-left'>{this.props.index}. {this.props.data.left}</Col>
 				<Col className='text-right'>{this.props.data.right}</Col>
 			</Row>
 		);

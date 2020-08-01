@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { Container, Row } from 'react-bootstrap';
-import './GraphDisplay.css';
+import './BarGraphDisplay.css';
 
 const COLORS = [
 	'#8783D1',
@@ -28,7 +28,7 @@ const getBarColor = (bar) => {
 	return COLORS[bar.index - offSet];
 };
 
-class GraphDisplay extends Component {
+class BarGraphDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
 			return (
@@ -111,4 +111,4 @@ class GraphDisplay extends Component {
 	}
 }
 
-export default GraphDisplay;
+export default BarGraphDisplay;

@@ -1,0 +1,11 @@
+.dataPointToolTip{
+    background-color: white;
+}
+
+.dataPointToolTip div{
+    font-weight: bold;
+}
+
+.dataPointToolTipHeader{
+    text-decoration: underline;
+}
