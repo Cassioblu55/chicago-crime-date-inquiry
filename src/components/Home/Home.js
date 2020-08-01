@@ -18,6 +18,8 @@ import LineGraphDisplaySingleYearMonth from '../LineGraphDisplaySingleYearMonth'
 import LineGraphDisplaySingleYearMonthDay from '../LineGraphDisplaySingleYearMonthDay/LineGraphDisplaySingleYearMonthDay';
 import ZoomLevel from '../../helpers/ZoomLevel';
 
+import DataTotal from '../DataTotal';
+
 //CSS
 import './Home.css';
 
@@ -38,8 +40,13 @@ class Home extends Component {
 		}
 	};
 
-	getLineGraphDisplay = (zoomLevel) => {
+	getSingleZoomGraphDisplay = (zoomLevel) => {
 		if (
+			this.props.selectedSingleHour !== undefined &&
+			this.props.zoomLevel === ZoomLevel.HOUR
+		) {
+			return zoomLevel === ZoomLevel.HOUR;
+		} else if (
 			this.props.selectedSingleDay !== undefined &&
 			this.props.zoomLevel === ZoomLevel.DAY
 		) {
@@ -100,6 +107,18 @@ class Home extends Component {
 		this.props.setAllCrimeByTypeFromSingleDate(requestedDate);
 	};
 
+	getMainBarGraphTotal = (data) => {
+		if (data !== undefined) {
+			let total = 0;
+			for (let key of Object.keys(data)) {
+				total += data[key];
+			}
+			return total;
+		} else {
+			return 0;
+		}
+	};
+
 	render() {
 		const dateDisplay =
 			DateFormat.asString('MM-dd', this.props.allCrimeByTypeFromSingleDate) +
@@ -112,14 +131,22 @@ class Home extends Component {
 					locked={this.props.barGraphLocked}
 				/>
 				<Row>
+					<Col>
+						<h3 className='text-center'>
+							All Crimes Reported on {dateDisplay}
+						</h3>
+					</Col>
 					<BarGraphDisplay
-						displayDate={dateDisplay}
 						data={this.props.mainGraphData}
 						axisBottomLegend='Crime Type'
 						axisLeftLegend='Crime Count'
 						graphHeight={400}
 						locked={this.props.barGraphLocked}
 					/>
+					{this.props.mainGraphData && <DataTotal
+						header={`Total Crime Reported on ${dateDisplay}`}
+						total={this.getMainBarGraphTotal(this.props.mainGraphData)}
+					/>}
 				</Row>
 				<Row>
 					<Col>
@@ -160,6 +187,9 @@ class Home extends Component {
 						setSelectedSingleYear={this.props.setSelectedSingleYear}
 						setSelectedSingleMonth={this.props.setSelectedSingleMonth}
 						setSelectedSingleDay={this.props.setSelectedSingleDay}
+						setSelectedSingleHour={this.props.setSelectedSingleHour}
+						perviousSelectedHour={this.props.perviousSelectedHour}
+						hour={this.props.selectedSingleHour}
 						zoomLevel={this.props.zoomLevel}
 						day={this.props.selectedSingleDay}
 						perviousSelectedDay={this.props.perviousSelectedDay}
@@ -171,7 +201,30 @@ class Home extends Component {
 					/>
 				</Row>
 				<Row>
-					{this.getLineGraphDisplay(ZoomLevel.DAY) && (
+					{this.getSingleZoomGraphDisplay(ZoomLevel.HOUR) && (
+						<Container>
+							<BarGraphDisplay
+								data={this.props.allCrimeBySingleHour}
+								axisLeftLegend='Crime Count'
+								axisBottomLegend='Type'
+								locked={this.props.lineGraphLock}
+								graphHeight={450}
+							/>
+							{this.props.allCrimeBySingleHour && <DataTotal
+								header={`Crime from ${Moment(
+									`${this.props.selectedSingleHour}:00:00`,
+									'HH:mm:ss'
+								).format('LT')} - ${Moment(
+									`${this.props.selectedSingleHour}:59:59`,
+									'HH:mm:ss'
+								).format('LT')}`}
+								total={this.getMainBarGraphTotal(
+									this.props.allCrimeBySingleHour
+								)}
+							/>}
+						</Container>
+					)}
+					{this.getSingleZoomGraphDisplay(ZoomLevel.DAY) && (
 						<LineGraphDisplaySingleYearMonthDay
 							data={this.props.allCrimeBySingleDay}
 							year={this.props.selectedSingleYear}
@@ -182,9 +235,10 @@ class Home extends Component {
 							color={this.props.lineGraphColor}
 							locked={this.props.lineGraphLock}
 							graphHeight={450}
+							setSelectedSingleHour={this.props.setSelectedSingleHour}
 						/>
 					)}
-					{this.getLineGraphDisplay(ZoomLevel.MONTH) && (
+					{this.getSingleZoomGraphDisplay(ZoomLevel.MONTH) && (
 						<LineGraphDisplaySingleYearMonth
 							data={this.props.allCrimeBySingleMonth}
 							year={this.props.selectedSingleYear}
@@ -197,7 +251,7 @@ class Home extends Component {
 							setSelectedSingleDay={this.props.setSelectedSingleDay}
 						/>
 					)}
-					{this.getLineGraphDisplay(ZoomLevel.YEAR) && (
+					{this.getSingleZoomGraphDisplay(ZoomLevel.YEAR) && (
 						<LineGraphDisplaySingleYear
 							data={this.props.allCrimeBySingleYear}
 							year={this.props.selectedSingleYear}
@@ -209,7 +263,7 @@ class Home extends Component {
 							setSelectedSingleMonth={this.props.setSelectedSingleMonth}
 						/>
 					)}
-					{this.getLineGraphDisplay(ZoomLevel.ALL) && (
+					{this.getSingleZoomGraphDisplay(ZoomLevel.ALL) && (
 						<LineGraphDisplayAllYears
 							data={this.props.allCrimeByMonth}
 							axisLeftLegend='Crime Count'
