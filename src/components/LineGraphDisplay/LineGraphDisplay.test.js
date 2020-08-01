@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import GraphDisplay from './GraphDisplay';
+import LineGraphDisplay from './LineGraphDisplay';
 
-describe('GraphDisplay', () => {
+describe('LineGraphDisplay', () => {
   test('matches snapshot', () => {
-    const wrapper = shallow(<GraphDisplay />);
+    const wrapper = shallow(<LineGraphDisplay />);
     expect(wrapper).toMatchSnapshot();
   });
 });
