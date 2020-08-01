@@ -3,4 +3,5 @@ export default {
 	YEAR: 'year',
 	MONTH: 'month',
 	DAY: 'day',
+	HOUR: 'hour'
 };

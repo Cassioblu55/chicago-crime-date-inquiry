@@ -87,6 +87,9 @@ class LineGraphDisplaySingleYearMonthDay extends Component {
 							}}
 							pointLabelYOffset={-12}
 							useMesh={true}
+							onClick={function(point){
+								self.props.setSelectedSingleHour(point.data.x)
+							}}
 						/>
 					</Row>
 					<DataTotal

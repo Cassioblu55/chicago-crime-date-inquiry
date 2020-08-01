@@ -16,6 +16,7 @@ import { AllCrimeByMonth } from './queries/AllCrimeByMonth/AllCrimeByMonth';
 import { SingleYear } from './queries/SingleYear/SingleYear';
 import { SingleMonth } from './queries/SingleMonth/SingleMonth';
 import { SingleDay } from './queries/SingleDay/SingleDay';
+import { SingleHour } from './queries/SingleHour/SingleHour';
 
 import ZoomLevel from './helpers/ZoomLevel';
 
@@ -23,24 +24,38 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
+			//Main Graph Data
 			allCrimeByTypeFromSingleDate: new Date(),
 			allCrimeByTypeFromSingleDateData: undefined,
 			allCrimeByDate: undefined,
+
+			//Loading Locks
 			barGraphLocked: false,
 			singleRowLock: false,
 			lineGraphLock: false,
-			allCrimeByMonth: undefined,
-			selectedSingleYear: undefined,
-			allCrimeBySingleYear: undefined,
+
 			lineGraphColor: undefined,
-			allCrimeBySingleMonth: undefined,
+			zoomLevel: ZoomLevel.ALL,
+
+			//Single Year
+			allCrimeBySingleYear: undefined,
+			selectedSingleYear: undefined,
+			perviousSelectedYear: undefined,
+
+			//Single Month
+			perviousSelectedMonth: undefined,
 			selectedSingleMonth: undefined,
+			allCrimeBySingleMonth: undefined,
+
+			//Single Day
+			perviousSelectedDay: undefined,
 			selectedSingleDay: undefined,
 			allCrimeBySingleDay: undefined,
-			zoomLevel: ZoomLevel.ALL,
-			perviousSelectedDay: undefined,
-			perviousSelectedYear: undefined,
-			perviousSelectedMonth: undefined,
+
+			//Single Hour
+			allCrimeBySingleHour: undefined,
+			selectedSingleHour: undefined,
+			perviousSelectedHour: undefined,
 		};
 	}
 
@@ -56,6 +71,16 @@ class App extends Component {
 		console.log(error);
 	};
 
+	//Get All Crimes for every year
+	getAllCrimeByMonth() {
+		let self = this;
+		this.setState({ lineGraphLock: true });
+		AllCrimeByMonth(function (results) {
+			self.setState({ allCrimeByMonth: results, lineGraphLock: true });
+		}, this.callOnErrorDefault);
+	}
+
+	//Get Date Display Data
 	getAllCrimeByTypeFromSingleDate = (date) => {
 		this.setState({ singleRowLock: true, barGraphLocked: true });
 		let self = this;
@@ -70,6 +95,32 @@ class App extends Component {
 			},
 			this.callOnErrorDefault
 		);
+	};
+
+	getAllCrimeByDate() {
+		let self = this;
+		this.setState({ lineGraphLock: true });
+		AllCrimeByDate(function (results) {
+			self.setState({ allCrimeByDate: results, lineGraphLock: false });
+		}, this.callOnErrorDefault);
+	}
+
+	setAllCrimeByTypeFromSingleDate = (date) => {
+		this.setState({
+			allCrimeByTypeFromSingleDate: date,
+		});
+		this.getAllCrimeByTypeFromSingleDate(date);
+	};
+
+	//Single Year
+	setSelectedSingleYear = (year) => {
+		this.setState({
+			perviousSelectedYear:
+				this.state.selectedSingleYear || this.state.perviousSelectedYear,
+			selectedSingleYear: year,
+			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
+		});
+		this.getCrimeDataBySingleYear(year);
 	};
 
 	getCrimeDataBySingleYear = (year) => {
@@ -89,6 +140,31 @@ class App extends Component {
 		}
 	};
 
+	setSelectedSingleYearFromLegend = (year) => {
+		this.setState({
+			perviousSelectedYear: undefined,
+			perviousSelectedMonth: undefined,
+			perviousSelectedDay: undefined,
+			perviousSelectedHour: undefined,
+			selectedSingleYear: year,
+			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
+		});
+		this.getCrimeDataBySingleYear(year);
+	};
+
+	//Single Month
+	setSelectedSingleMonth = (month) => {
+		if (this.state.selectedSingleYear !== undefined) {
+			this.setState({
+				perviousSelectedMonth:
+					this.state.selectedSingleMonth || this.state.perviousSelectedMonth,
+				selectedSingleMonth: month,
+				zoomLevel: month === undefined ? ZoomLevel.YEAR : ZoomLevel.MONTH,
+			});
+			this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
+		}
+	};
+
 	getCrimeDataBySingleMonth = (year, month) => {
 		if (year !== undefined && month !== undefined) {
 			this.setState({ lineGraphLock: true });
@@ -103,6 +179,26 @@ class App extends Component {
 					});
 				},
 				this.callOnErrorDefault
+			);
+		}
+	};
+
+	//Single Day
+	setSelectedSingleDay = (day) => {
+		if (
+			this.state.selectedSingleYear !== undefined &&
+			this.state.selectedSingleMonth !== undefined
+		) {
+			this.setState({
+				perviousSelectedDay:
+					this.state.selectedSingleDay || this.state.perviousSelectedDay,
+				selectedSingleDay: day,
+				zoomLevel: day === undefined ? ZoomLevel.MONTH : ZoomLevel.DAY,
+			});
+			this.getCrimeDataBySingleDay(
+				this.state.selectedSingleYear,
+				this.state.selectedSingleMonth,
+				day
 			);
 		}
 	};
@@ -126,83 +222,51 @@ class App extends Component {
 		}
 	};
 
-	setAllCrimeByTypeFromSingleDate = (date) => {
-		this.setState({
-			allCrimeByTypeFromSingleDate: date,
-		});
-		this.getAllCrimeByTypeFromSingleDate(date);
-	};
-
-	getAllCrimeByDate() {
-		let self = this;
-		this.setState({ lineGraphLock: true });
-		AllCrimeByDate(function (results) {
-			self.setState({ allCrimeByDate: results, lineGraphLock: false });
-		}, this.callOnErrorDefault);
-	}
-
-	getAllCrimeByMonth() {
-		let self = this;
-		this.setState({ lineGraphLock: true });
-		AllCrimeByMonth(function (results) {
-			self.setState({ allCrimeByMonth: results, lineGraphLock: true });
-		}, this.callOnErrorDefault);
-	}
-
-	setSelectedSingleYear = (year) => {
-		this.setState({
-			perviousSelectedYear:
-				this.state.selectedSingleYear || this.state.perviousSelectedYear,
-			selectedSingleYear: year,
-			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
-		});
-		this.getCrimeDataBySingleYear(year);
-	};
-
-	setSelectedSingleYearFromLegend = (year) => {
-		this.setState({
-			perviousSelectedYear: undefined,
-			perviousSelectedMonth: undefined,
-			perviousSelectedDay: undefined,
-			selectedSingleYear: year,
-			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
-		});
-		this.getCrimeDataBySingleYear(year);
-	}
-
-	setSelectedSingleDay = (day) => {
+	//Single Hour
+	setSelectedSingleHour = (hour) => {
 		if (
 			this.state.selectedSingleYear !== undefined &&
-			this.state.selectedSingleMonth !== undefined
+			this.state.selectedSingleMonth !== undefined &&
+			this.state.selectedSingleDay !== undefined
 		) {
 			this.setState({
-				perviousSelectedDay:
-					this.state.selectedSingleDay || this.state.perviousSelectedDay,
-				selectedSingleDay: day,
-				zoomLevel: day === undefined ? ZoomLevel.MONTH : ZoomLevel.DAY,
+				perviousSelectedHour:
+					this.state.selectedSingleHour || this.state.perviousSelectedHour,
+				selectedSingleHour: hour,
+				zoomLevel: hour === undefined ? ZoomLevel.DAY : ZoomLevel.HOUR,
 			});
-			this.getCrimeDataBySingleDay(
+			this.getCrimeDataBySingleHour(
 				this.state.selectedSingleYear,
 				this.state.selectedSingleMonth,
-				day
+				this.state.selectedSingleDay,
+				hour
 			);
 		}
 	};
 
-	setSelectedSingleMonth = (month) => {
-		if (this.state.selectedSingleYear !== undefined) {
-			this.setState({
-				perviousSelectedMonth:
-					this.state.selectedSingleMonth || this.state.perviousSelectedMonth,
-				selectedSingleMonth: month,
-				zoomLevel: month === undefined ? ZoomLevel.YEAR : ZoomLevel.MONTH,
-			});
-			this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
+	getCrimeDataBySingleHour = (year, month, day, hour) => {
+		if (
+			year !== undefined &&
+			month !== undefined &&
+			day !== undefined &&
+			hour !== undefined
+		) {
+			this.setState({ lineGraphLock: true });
+			let self = this;
+			SingleHour(
+				year,
+				month,
+				day,
+				hour,
+				function (results) {
+					self.setState({
+						allCrimeBySingleHour: results,
+						lineGraphLock: false,
+					});
+				},
+				this.callOnErrorDefault
+			);
 		}
-	};
-
-	setLineGraphColor = (color) => {
-		this.setState({ lineGraphColor: color });
 	};
 
 	render() {
@@ -222,37 +286,50 @@ class App extends Component {
 								path='/home'
 								render={() => (
 									<Home
+										//LoadingLocks
 										barGraphLocked={this.state.barGraphLocked}
-										mainGraphData={this.state.allCrimeByTypeFromSingleDateData}
-										allCrimeByTypeFromSingleDate={
-											this.state.allCrimeByTypeFromSingleDate
-										}
-										setAllCrimeByTypeFromSingleDate={
-											this.setAllCrimeByTypeFromSingleDate
-										}
-										allCrimeByDate={this.state.allCrimeByDate}
+										singleRowLock={this.state.singleRowLock}
+										lineGraphLock={this.state.lineGraphLock}
+										//All Crime By Month
 										allCrimeByMonth={this.state.allCrimeByMonth}
-										selectedSingleYear={this.state.selectedSingleYear}
+										//Single Year
 										allCrimeBySingleYear={this.state.allCrimeBySingleYear}
 										setSelectedSingleYear={this.setSelectedSingleYear}
-										setLineGraphColor={this.setLineGraphColor}
-										lineGraphColor={this.state.lineGraphColor}
-										setSelectedSingleMonth={this.setSelectedSingleMonth}
-										lineGraphLock={this.state.lineGraphLock}
-										singleRowLock={this.state.singleRowLock}
-										selectedSingleMonth={this.state.selectedSingleMonth}
-										allCrimeBySingleMonth={this.state.allCrimeBySingleMonth}
-										setSelectedSingeMonth={this.setSelectedSingeMonth}
-										setSelectedSingleDay={this.setSelectedSingleDay}
-										selectedSingleDay={this.state.selectedSingleDay}
-										allCrimeBySingleDay={this.state.allCrimeBySingleDay}
-										zoomLevel={this.state.zoomLevel}
-										perviousSelectedDay={this.state.perviousSelectedDay}
+										selectedSingleYear={this.state.selectedSingleYear}
 										perviousSelectedYear={this.state.perviousSelectedYear}
-										perviousSelectedMonth={this.state.perviousSelectedMonth}
 										setSelectedSingleYearFromLegend={
 											this.setSelectedSingleYearFromLegend
 										}
+										//Single Month
+										setSelectedSingleMonth={this.setSelectedSingleMonth}
+										selectedSingleMonth={this.state.selectedSingleMonth}
+										allCrimeBySingleMonth={this.state.allCrimeBySingleMonth}
+										setSelectedSingeMonth={this.setSelectedSingeMonth}
+										perviousSelectedMonth={this.state.perviousSelectedMonth}
+										//Single Day
+										allCrimeByTypeFromSingleDate={
+											this.state.allCrimeByTypeFromSingleDate
+										}
+										perviousSelectedDay={this.state.perviousSelectedDay}
+										selectedSingleDay={this.state.selectedSingleDay}
+										allCrimeBySingleDay={this.state.allCrimeBySingleDay}
+										setSelectedSingleDay={this.setSelectedSingleDay}
+										//Single Hour
+										perviousSelectedHour={this.state.perviousSelectedHour}
+										selectedSingleHour={this.state.selectedSingleHour}
+										allCrimeBySingleHour={this.state.allCrimeBySingleHour}
+										setSelectedSingleHour={this.setSelectedSingleHour}
+										//Main Bar Graph
+										mainGraphData={this.state.allCrimeByTypeFromSingleDateData}
+										//Data Display Rows
+										allCrimeByDate={this.state.allCrimeByDate}
+										setAllCrimeByTypeFromSingleDate={
+											this.setAllCrimeByTypeFromSingleDate
+										}
+										//Line Graph
+										setLineGraphColor={this.setLineGraphColor}
+										lineGraphColor={this.state.lineGraphColor}
+										zoomLevel={this.state.zoomLevel}
 									/>
 								)}
 							/>
@@ -263,6 +340,10 @@ class App extends Component {
 			</Container>
 		);
 	}
+
+	setLineGraphColor = (color) => {
+		this.setState({ lineGraphColor: color });
+	};
 }
 
 export default App;

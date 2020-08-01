@@ -1,5 +1,3 @@
-import { MdViewDay } from "react-icons/md";
-
 export function GetParams(year, month, day) {
 	return {
 		$select: 'date, count(date) as count',
