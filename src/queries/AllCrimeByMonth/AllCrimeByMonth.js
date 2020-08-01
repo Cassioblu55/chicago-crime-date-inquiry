@@ -38,11 +38,11 @@ function groupCrimeByDate(data) {
 			};
 		}
 	}
-	return Object.keys(groupedData).map(year => {
+	return Object.keys(groupedData).map((year) => {
 		return { id: year, data: groupedData[year].data };
 	});
 }
 
-function mapMonth(month, count){
+function mapMonth(month, count) {
 	return { month: parseInt(month), amount: parseInt(count) };
 }

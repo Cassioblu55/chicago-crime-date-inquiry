@@ -156,7 +156,9 @@ class Home extends Component {
 							data={this.props.allCrimeBySingleYearByDay}
 							year={this.props.selectedSingleYear}
 							color={this.props.singleYearColor}
+							loading={this.props.dateChangerLocked}
 							graphHeight={450}
+							setMonthYear={this.props.setMonthYear}
 						/>
 					)}
 					{this.props.selectedSingleYear === undefined && (

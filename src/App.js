@@ -83,16 +83,22 @@ class App extends Component {
 
 	getAllCrimeByDate() {
 		let self = this;
-		AllCrimeByDate(function (results) {
-			self.setState({ allCrimeByDate: results });
-		}, this.callOnErrorDefault);
+		AllCrimeByDate(
+			function (results) {
+				self.setState({ allCrimeByDate: results });
+			},
+			this.callOnErrorDefault
+		);
 	}
 
 	getAllCrimeByMonth() {
 		let self = this;
-		AllCrimeByMonth(function (results) {
-			self.setState({ allCrimeByMonth: results });
-		}, this.callOnErrorDefault);
+		AllCrimeByMonth(
+			function (results) {
+				self.setState({ allCrimeByMonth: results });
+			},
+			this.callOnErrorDefault
+		);
 	}
 
 	setSelectedSingleYear = (year) => {
@@ -101,8 +107,11 @@ class App extends Component {
 	};
 
 	setSelectedSingleYearColor = (color) => {
-		console.log(color);
 		this.setState({ singleYearColor: color });
+	};
+
+	setMonthYear = (point) => {
+		console.log(point);
 	};
 
 	render() {
@@ -139,6 +148,7 @@ class App extends Component {
 										setSelectedSingleYear={this.setSelectedSingleYear}
 										setSelectedSingleYearColor={this.setSelectedSingleYearColor}
 										singleYearColor={this.state.singleYearColor}
+										setMonthYear={this.setMonthYear}
 									/>
 								)}
 							/>

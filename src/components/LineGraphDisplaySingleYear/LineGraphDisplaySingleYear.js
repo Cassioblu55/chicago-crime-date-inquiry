@@ -10,7 +10,8 @@ import { ResponsiveLine } from '@nivo/line';
 
 class LineGraphDisplaySingleYear extends Component {
 	render() {
-		if (this.props.data !== undefined) {
+    var self = this;
+    if (this.props.data !== undefined && this.props.loading === false) {
 			return (
 				<Container>
 					<Row style={{ height: `${this.props.graphHeight}px` }}>
@@ -71,7 +72,8 @@ class LineGraphDisplaySingleYear extends Component {
 								);
 							}}
 							pointLabelYOffset={-12}
-							useMesh={true}
+              useMesh={true}
+              onClick={function(point){self.props.setMonthYear(point)}}
 						/>
 					</Row>
 				</Container>
@@ -81,10 +83,13 @@ class LineGraphDisplaySingleYear extends Component {
 		}
 	}
 
-	createDisplayData(data, year, index) {
+	createDisplayData(data, year) {
     let yearData = [];
     data.forEach((row) =>{
-      yearData.push({ x: row.monthNumber, y: row.amount});
+      yearData.push({
+				x: row.monthNumber,
+				y: row.amount,
+			});
     });
 			return [
 				{
