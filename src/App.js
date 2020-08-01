@@ -58,18 +58,20 @@ class App extends Component {
 	};
 
 	getCrimeDataBySingleYear = (year) => {
-		this.setState({ dateChangerLocked: true });
-		let self = this;
-		SingleYear(
-			year,
-			function (results) {
-				self.setState({
-					allCrimeBySingleYearByDay: results,
-					dateChangerLocked: false,
-				});
-			},
-			this.callOnErrorDefault
-		);
+		if (year !== undefined) {
+			this.setState({ dateChangerLocked: true });
+			let self = this;
+			SingleYear(
+				year,
+				function (results) {
+					self.setState({
+						allCrimeBySingleYearByDay: results,
+						dateChangerLocked: false,
+					});
+				},
+				this.callOnErrorDefault
+			);
+		}
 	};
 
 	setAllCrimeByTypeFromSingleDate = (date) => {

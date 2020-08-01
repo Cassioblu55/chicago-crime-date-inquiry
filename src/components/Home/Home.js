@@ -143,6 +143,7 @@ class Home extends Component {
 					<LineGraphDateSelector
 						header={this.getLineGraphHeader(this.props.selectedSingleYear)}
 						setSelectedSingleYear={this.props.setSelectedSingleYear}
+						loading={this.props.dateChangerLocked}
 						selectedSingleYear={this.props.selectedSingleYear}
 					/>
 				</Row>
