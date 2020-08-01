@@ -8,7 +8,7 @@ import Moment from 'moment';
 import Ordinal from 'ordinal';
 import DataTotal from '../DataTotal';
 
-class LineGraphDisplaySingleYearMonth extends Component {
+class LineGraphDisplaySingleYearMonthDay extends Component {
 	render() {
 		var self = this;
 		if (this.props.data !== undefined && this.props.locked === false) {
@@ -19,7 +19,8 @@ class LineGraphDisplaySingleYearMonth extends Component {
 							data={this.createDisplayData(
 								this.props.data,
 								this.props.year,
-								this.props.month
+								this.props.month,
+								this.props.day
 							)}
 							margin={{ top: 10, right: 50, bottom: 50, left: 60 }}
 							xScale={{ type: 'point' }}
@@ -69,27 +70,30 @@ class LineGraphDisplaySingleYearMonth extends Component {
 											</Col>
 										</Row>
 										<Row>
-											<Col xs={9}>{`${Moment(
-												`${self.props.year}-${self.props.month}-${point.data.x}`,
-												'YYYY-MM-DD'
-											).format('dddd')} the ${Ordinal(point.data.x)}`}</Col>
-											<Col xs={3}>{Numeral(point.data.y).format('0,0')}</Col>
+											<Col>
+												{`${Moment(`${point.data.x}:00:00`, 'HH:mm:ss').format(
+													'LT'
+												)} - ${Moment(
+													`${point.data.x}:59:59`,
+													'HH:mm:ss'
+												).format('LT')}`}
+											</Col>
+										</Row>
+										<Row>
+											<Col>Crimes: {Numeral(point.data.y).format('0,0')}</Col>
 										</Row>
 									</Container>
 								);
 							}}
 							pointLabelYOffset={-12}
 							useMesh={true}
-							onClick={function (point) {
-								self.props.setSelectedSingleDay(point.data.x);
-							}}
 						/>
 					</Row>
 					<DataTotal
 						header={`${Moment(
-							`${self.props.year}-${self.props.month}`,
-							'YYYY-MM'
-						).format('MMMM YYYY')} Crimes`}
+							`${this.props.year}-${this.props.month}-${this.props.day}`,
+							'YYYY-MM-DD'
+						).format('MMM Do')} Crimes`}
 						total={this.getTotal(this.props.data)}
 					/>
 				</Container>
@@ -107,21 +111,21 @@ class LineGraphDisplaySingleYearMonth extends Component {
 		return total;
 	};
 
-	createDisplayData(data, year, month) {
-		let yearData = [];
+	createDisplayData(data, year, month, day) {
+		let timeData = [];
 		data.forEach((row) => {
-			yearData.push({
-				x: row.dayNumber,
+			timeData.push({
+				x: row.time,
 				y: row.amount,
 			});
 		});
 		return [
 			{
-				id: Moment(`${year}-${month}`, 'YYYY-MM').format('MMM-YYYY'),
-				data: yearData,
+				id: Moment(`${year}-${month}-${day}`, 'YYYY-MM-DD').format('MMM Do'),
+				data: timeData,
 			},
 		];
 	}
 }
 
-export default LineGraphDisplaySingleYearMonth;
+export default LineGraphDisplaySingleYearMonthDay;

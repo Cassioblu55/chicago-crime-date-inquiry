@@ -74,7 +74,7 @@ class LineGraphDisplaySingleYear extends Component {
 							pointLabelYOffset={-12}
 							useMesh={true}
 							onClick={function (point) {
-								self.props.setMonthYear(point);
+								self.props.setSelectedSingleMonth(point.data.x);
 							}}
 						/>
 					</Row>

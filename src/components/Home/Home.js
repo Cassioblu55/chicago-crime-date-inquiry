@@ -15,6 +15,7 @@ import LineGraphDisplayAllYears from '../LineGraphDisplayAllYears/LineGraphDispl
 import LineGraphDateSelector from '../LineGraphDateSelector/LineGraphDateSelector';
 import LineGraphDisplaySingleYear from '../LineGraphDisplaySingleYear';
 import LineGraphDisplaySingleYearMonth from '../LineGraphDisplaySingleYearMonth';
+import LineGraphDisplaySingleYearMonthDay from '../LineGraphDisplaySingleYearMonthDay/LineGraphDisplaySingleYearMonthDay';
 
 //CSS
 import './Home.css';
@@ -44,23 +45,15 @@ class Home extends Component {
 	};
 
 	getLineGraphDisplay = (type) => {
-		if (type === LINE_GRAPH_DISPLAY_TYPE.ALL) {
-			return (
-				this.props.selectedSingleMonth === undefined &&
-				this.props.selectedSingleYear === undefined
-			);
-		} else if (type === LINE_GRAPH_DISPLAY_TYPE.YEAR) {
-			return (
-				this.props.selectedSingleMonth === undefined &&
-				this.props.selectedSingleYear !== undefined
-			);
-		} else if (type === LINE_GRAPH_DISPLAY_TYPE.MONTH) {
-			return (
-				this.props.selectedSingleMonth !== undefined &&
-				this.props.selectedSingleYear !== undefined
-			);
+		if (this.props.selectedSingleDay !== undefined) {
+			return type === LINE_GRAPH_DISPLAY_TYPE.DAY;
+		} else if (this.props.selectedSingleMonth !== undefined) {
+			return type === LINE_GRAPH_DISPLAY_TYPE.MONTH;
+		} else if (this.props.selectedSingleYear !== undefined) {
+			return type === LINE_GRAPH_DISPLAY_TYPE.YEAR;
+		} else{
+			return type === LINE_GRAPH_DISPLAY_TYPE.ALL;
 		}
-		return false;
 	};
 
 	getBottomTenCrimeDays = (data) => {
@@ -163,20 +156,38 @@ class Home extends Component {
 					<LineGraphDateSelector
 						setSelectedSingleYear={this.props.setSelectedSingleYear}
 						setSelectedSingeMonth={this.props.setSelectedSingeMonth}
+						setSelectedSingleDay={this.props.setSelectedSingleDay}
+						day={this.props.selectedSingleDay}
 						year={this.props.selectedSingleYear}
 						month={this.props.selectedSingleMonth}
 						locked={this.props.lineGraphLock}
 					/>
 				</Row>
 				<Row>
+					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.DAY) && (
+						<LineGraphDisplaySingleYearMonthDay
+							data={this.props.allCrimeBySingleDay}
+							year={this.props.selectedSingleYear}
+							month={this.props.selectedSingleMonth}
+							axisLeftLegend='Crime Count'
+							axisBottomLegend='Time'
+							day={this.props.selectedSingleDay}
+							color={this.props.lineGraphColor}
+							locked={this.props.lineGraphLock}
+							graphHeight={450}
+						/>
+					)}
 					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.MONTH) && (
 						<LineGraphDisplaySingleYearMonth
 							data={this.props.allCrimeBySingleMonth}
 							year={this.props.selectedSingleYear}
 							month={this.props.selectedSingleMonth}
+							axisLeftLegend='Crime Count'
+							axisBottomLegend='Day'
 							color={this.props.lineGraphColor}
 							locked={this.props.lineGraphLock}
 							graphHeight={450}
+							setSelectedSingleDay={this.props.setSelectedSingleDay}
 						/>
 					)}
 					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.YEAR) && (
@@ -184,9 +195,11 @@ class Home extends Component {
 							data={this.props.allCrimeBySingleYear}
 							year={this.props.selectedSingleYear}
 							color={this.props.lineGraphColor}
+							axisLeftLegend='Crime Count'
+							axisBottomLegend='Month'
 							locked={this.props.lineGraphLock}
 							graphHeight={450}
-							setMonthYear={this.props.setMonthYear}
+							setSelectedSingleMonth={this.props.setSelectedSingleMonth}
 						/>
 					)}
 					{this.getLineGraphDisplay(LINE_GRAPH_DISPLAY_TYPE.ALL) && (
@@ -196,7 +209,7 @@ class Home extends Component {
 							axisBottomLegend='Month'
 							locked={this.props.lineGraphLock}
 							setSelectedSingleYear={this.props.setSelectedSingleYear}
-							setSelectedSingleYearColor={this.props.setSelectedSingleYearColor}
+							setLineGraphColor={this.props.setLineGraphColor}
 							graphHeight={450}
 						/>
 					)}

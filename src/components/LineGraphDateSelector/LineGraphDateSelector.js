@@ -11,11 +11,15 @@ class LineGraphDateSelector extends Component {
 		this.state = {
 			perviousSelectedYear: undefined,
 			perviousSelectedMonth: undefined,
+			perviousSelectedDay: undefined,
 		};
 	}
 
 	zoomOut = () => {
-		if (this.props.month !== undefined) {
+		if (this.props.day !== undefined) {
+			this.setState({ perviousSelectedDay: this.props.day });
+			this.setSelectedSingleDay(undefined);
+		} else if (this.props.month !== undefined) {
 			this.setState({ perviousSelectedMonth: this.props.month });
 			this.setSelectedSingeMonth(undefined);
 		} else if (this.props.year !== undefined) {
@@ -25,12 +29,15 @@ class LineGraphDateSelector extends Component {
 	};
 
 	zoomIn = () => {
-		if (this.state.perviousSelectedMonth !== undefined) {
-			this.setState({ perviousSelectedMonth: undefined });
+		if (this.state.perviousSelectedDay !== undefined) {
+			this.setSelectedSingleDay(this.state.perviousSelectedDay);
+			this.setState({ perviousSelectedDay: undefined });
+		} else if (this.state.perviousSelectedMonth !== undefined) {
 			this.setSelectedSingeMonth(this.state.perviousSelectedMonth);
+			this.setState({ perviousSelectedMonth: undefined });
 		} else if (this.state.perviousSelectedYear !== undefined) {
-			this.setState({ perviousSelectedYear: undefined });
 			this.setSelectedSingleYear(this.state.perviousSelectedYear);
+			this.setState({ perviousSelectedYear: undefined });
 		}
 	};
 
@@ -42,24 +49,34 @@ class LineGraphDateSelector extends Component {
 		this.props.setSelectedSingeMonth(month);
 	};
 
+	setSelectedSingleDay = (day) => {
+		this.props.setSelectedSingleDay(day);
+	};
+
 	getZoomOutLock = () => {
 		return (
 			this.props.locked ||
-			(this.props.month === undefined &&
-			this.props.year === undefined)
+			(this.props.day &&
+				this.props.month === undefined &&
+				this.props.year === undefined)
 		);
 	};
 
 	getZoomInLock = () => {
 		return (
 			this.props.locked ||
-			(this.state.perviousSelectedYear === undefined &&
+			(this.state.perviousSelectedDay === undefined &&
+				this.state.perviousSelectedYear === undefined &&
 				this.state.perviousSelectedMonth === undefined)
 		);
 	};
 
-	getLineGraphHeader = (year, month) => {
-		if (year !== undefined && month !== undefined) {
+	getLineGraphHeader = (year, month, day) => {
+		if (year !== undefined && month !== undefined && day !== undefined) {
+			return `Crimes ${Moment(`${year}-${month}-${day}`, 'YYYY-MM-DD').format(
+				'MMM Do YYYY'
+			)}`;
+		} else if (year !== undefined && month !== undefined) {
 			return `Crimes ${Moment(`${year}-${month}`, 'YYYY-MM').format(
 				'MMMM YYYY'
 			)}`;
@@ -87,9 +104,13 @@ class LineGraphDateSelector extends Component {
 							</IconContext.Provider>
 						</Button>
 					</Col>
-					<Col>
+					<Col xs={10}>
 						<h3 className='text-center'>
-							{this.getLineGraphHeader(this.props.year, this.props.month)}
+							{this.getLineGraphHeader(
+								this.props.year,
+								this.props.month,
+								this.props.day
+							)}
 						</h3>
 					</Col>
 					<Col>
