@@ -4,45 +4,20 @@ import { ResponsiveLine } from '@nivo/line';
 import Moment from 'moment';
 import Numeral from 'numeral';
 
-import './LineGraphDisplay.css';
+import GetColor from '../../helpers/GetColor';
 
-const COLORS = [
-	'#8783D1',
-	'#AA9ABA',
-	'#BFA4A4',
-	'#D1ABAD',
-	'#E3B9BC',
-	'#A63A50',
-	'#012622',
-	'#012622',
-	'#003B36',
-	'#59114D',
-	'#42033D',
-];
+import './LineGraphDisplayAllYears.css';
 
-const getBarColor = (bar) => {
-	if (bar.index < COLORS.length) {
-		return COLORS[bar.index];
-	}
-	let offSet = COLORS.length;
-	while (bar.index - offSet >= COLORS.length) {
-		offSet += COLORS.length;
-	}
-	return COLORS[bar.index - offSet];
-};
-
-class LineGraphDisplay extends Component {
-	render() {
+class LineGraphDisplayAllYears extends Component {
+	render = () => {
 		if (this.props.data !== undefined) {
-			let data = this.createDisplayData(this.props.data);
 			let self = this;
 			return (
 				<Container>
-					<h3 className='text-center'>{this.props.header}</h3>
 					<Row style={{ height: '450px' }}>
 						<ResponsiveLine
-							data={data}
-							margin={{ top: 30, right: 110, bottom: 50, left: 60 }}
+							data={this.createDisplayData(this.props.data)}
+							margin={{ top: 10, right: 110, bottom: 50, left: 60 }}
 							xScale={{ type: 'point' }}
 							yScale={{
 								type: 'linear',
@@ -71,7 +46,7 @@ class LineGraphDisplay extends Component {
 								legendOffset: -50,
 								legendPosition: 'middle',
 							}}
-							colors={getBarColor}
+							colors={GetColor}
 							pointSize={10}
 							pointColor={{ theme: 'background' }}
 							pointBorderWidth={2}
@@ -112,10 +87,11 @@ class LineGraphDisplay extends Component {
 									itemOpacity: 0.75,
 									symbolSize: 12,
 									symbolShape: 'circle',
-                  symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                  onClick: function(data){
-                    console.log(data)
-                  },
+									symbolBorderColor: 'rgba(0, 0, 0, .5)',
+									onClick: function (data) {
+										self.props.setSelectedSingleYear(data.id);
+										self.props.setSelectedSingleYearColor(data.color);
+									},
 									effects: [
 										{
 											on: 'hover',
@@ -134,39 +110,13 @@ class LineGraphDisplay extends Component {
 		} else {
 			return <div />;
 		}
-	}
-
-	getToolTip(data) {
-		console.log(data);
-		return (
-			<div className='dataPointToolTip'>
-				<div>{data.point.serieId}</div>
-			</div>
-		);
-	}
-
-	// point:
-	// borderColor: "#e8c1a0"
-	// color: "transparent"
-	// data:
-	// label: "foo"
-	// x: 9
-	// xFormatted: 9
-	// y: 38265
-	// yFormatted: 38265
-	// __proto__: Object
-	// id: "2007.8"
-	// index: 80
-	// serieColor: "#e8c1a0"
-	// serieId: "2007"
-	// x: 197.27272727272728
-	// y: 70
+	};
 
 	createDisplayData(data) {
 		return data.map((row, index) => {
 			return {
-        id: row.id,
-        index: index,
+				id: row.id,
+				index: index,
 				data: row.data
 					.sort((a, b) => (a.month < b.month ? -1 : 1))
 					.map((month) => {
@@ -177,4 +127,4 @@ class LineGraphDisplay extends Component {
 	}
 }
 
-export default LineGraphDisplay;
+export default LineGraphDisplayAllYears;

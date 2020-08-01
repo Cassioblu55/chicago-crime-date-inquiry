@@ -11,7 +11,9 @@ import Moment from 'moment';
 import BarGraphDisplay from '../BarGraphDisplay/BarGraphDisplay';
 import DataDisplay from '../DataDisplay';
 import DateChanger from '../DateChanger';
-import LineGraphDisplay from '../LineGraphDisplay';
+import LineGraphDisplayAllYears from '../LineGraphDisplayAllYears/LineGraphDisplayAllYears';
+import LineGraphDateSelector from '../LineGraphDateSelector/LineGraphDateSelector';
+import LineGraphDisplaySingleYear from '../LineGraphDisplaySingleYear';
 
 //CSS
 import './Home.css';
@@ -49,6 +51,14 @@ class Home extends Component {
 		}
 	};
 
+	getLineGraphHeader = (year) => {
+		if (year !== undefined) {
+			return `Crimes Committed in ${year}`;
+		} else {
+			return 'All Crimes Commited';
+		}
+	};
+
 	formatAmount(amount) {
 		return Numeral(amount).format('0,0');
 	}
@@ -65,7 +75,7 @@ class Home extends Component {
 			}
 			return this.formatAmount(total);
 		} else {
-			return '';
+			return 'Crimes by Year';
 		}
 	}
 
@@ -104,7 +114,7 @@ class Home extends Component {
 							header='Days with Most Crime'
 							onClick={this.setDateByDataDisplay}
 							onClickDataSend={['left']}
-							locked={this.props.dateChangerLocked}
+							loading={this.props.dateChangerLocked}
 							rowSelectedData={{
 								left: Moment(
 									this.props.allCrimeByTypeFromSingleDate,
@@ -119,7 +129,7 @@ class Home extends Component {
 							header='Days with Least Crime'
 							onClick={this.setDateByDataDisplay}
 							onClickDataSend={['left']}
-							locked={this.props.dateChangerLocked}
+							loading={this.props.dateChangerLocked}
 							rowSelectedData={{
 								left: Moment(
 									this.props.allCrimeByTypeFromSingleDate,
@@ -130,12 +140,29 @@ class Home extends Component {
 					</Col>
 				</Row>
 				<Row>
-					<LineGraphDisplay
-						header='Crimes by Year'
-						data={this.props.allCrimeByMonth}
-						axisLeftLegend='Crime Count'
-						axisBottomLegend='Month'
+					<LineGraphDateSelector
+						header={this.getLineGraphHeader(this.props.selectedSingleYear)}
+						setSelectedSingleYear={this.props.setSelectedSingleYear}
+						selectedSingleYear={this.props.selectedSingleYear}
 					/>
+				</Row>
+				<Row>
+					{this.props.selectedSingleYear !== undefined && (
+						<LineGraphDisplaySingleYear
+							data={this.props.allCrimeBySingleYearByDay}
+							year={this.props.selectedSingleYear}
+							color={this.props.singleYearColor}
+						/>
+					)}
+					{this.props.selectedSingleYear === undefined && (
+						<LineGraphDisplayAllYears
+							data={this.props.allCrimeByMonth}
+							axisLeftLegend='Crime Count'
+							axisBottomLegend='Month'
+							setSelectedSingleYear={this.props.setSelectedSingleYear}
+							setSelectedSingleYearColor={this.props.setSelectedSingleYearColor}
+						/>
+					)}
 				</Row>
 			</Container>
 		);
