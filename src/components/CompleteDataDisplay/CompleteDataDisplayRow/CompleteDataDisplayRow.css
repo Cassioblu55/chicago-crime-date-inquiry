@@ -1,0 +1,9 @@
+.fullDataCell{
+    border: solid black 1px;
+    padding: 5px;
+    margin-bottom: 8px;
+}
+
+.fullDataData{
+    font-weight: bold;
+}

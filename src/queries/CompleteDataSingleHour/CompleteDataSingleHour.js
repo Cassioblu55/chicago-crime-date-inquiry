@@ -1,0 +1,45 @@
+import { GetParams } from './GetParams';
+
+//APIS
+import {
+	ChicagoCrimeDataApi,
+	CRIMES_2001_TO_PRESENT,
+} from '../../api/ChicagoCrimeDataApi';
+
+export function CompleteDataSingleHour(
+	year,
+	month,
+	day,
+	hour,
+	callOnSuccess,
+	callOnError
+) {
+	if (
+		year !== undefined &&
+		month !== undefined &&
+		day !== undefined &&
+		hour !== undefined
+	) {
+		ChicagoCrimeDataApi()
+			.get(CRIMES_2001_TO_PRESENT, {
+				params: GetParams(year, month, day, hour),
+			})
+			.then(function (response) {
+				callOnSuccess(getCrimeData(response.data));
+			})
+			.catch(function (error) {
+				callOnError(error);
+			});
+	}
+}
+
+function getCrimeData(data){
+	//2015-04-30T16:46:00.000
+	console.log(data[0].date.substring(14, 16));
+
+	return data
+		.map((row) => {
+			return { ...row, minute: parseInt(row.date.substring(14,16)) };
+		})
+		.sort((a, b) => (a.minute < b.minute ? -1 : 1));;
+}

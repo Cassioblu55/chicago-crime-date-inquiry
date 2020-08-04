@@ -17,6 +17,7 @@ import { SingleYear } from './queries/SingleYear/SingleYear';
 import { SingleMonth } from './queries/SingleMonth/SingleMonth';
 import { SingleDay } from './queries/SingleDay/SingleDay';
 import { SingleHour } from './queries/SingleHour/SingleHour';
+import { CompleteDataSingleHour } from './queries/CompleteDataSingleHour/CompleteDataSingleHour';
 
 import ZoomLevel from './helpers/ZoomLevel';
 
@@ -33,6 +34,7 @@ class App extends Component {
 			barGraphLocked: false,
 			singleRowLock: false,
 			lineGraphLock: false,
+			completeDataLock: false,
 
 			lineGraphColor: undefined,
 			zoomLevel: ZoomLevel.ALL,
@@ -56,6 +58,7 @@ class App extends Component {
 			allCrimeBySingleHour: undefined,
 			selectedSingleHour: undefined,
 			perviousSelectedHour: undefined,
+			singleHourCompleteData: undefined,
 		};
 	}
 
@@ -241,6 +244,12 @@ class App extends Component {
 				this.state.selectedSingleDay,
 				hour
 			);
+			this.getCompleteDataSingleHour(
+				this.state.selectedSingleYear,
+				this.state.selectedSingleMonth,
+				this.state.selectedSingleDay,
+				hour
+			);
 		}
 	};
 
@@ -269,6 +278,31 @@ class App extends Component {
 		}
 	};
 
+	getCompleteDataSingleHour = (year, month, day, hour) => {
+		if (
+			year !== undefined &&
+			month !== undefined &&
+			day !== undefined &&
+			hour !== undefined
+		) {
+			this.setState({ completeDataLock: true });
+			let self = this;
+			CompleteDataSingleHour(
+				year,
+				month,
+				day,
+				hour,
+				function (results) {
+					self.setState({
+						singleHourCompleteData: results,
+						completeDataLock: false,
+					});
+				},
+				this.callOnErrorDefault
+			);
+		}
+	};
+
 	render() {
 		return (
 			<Container
@@ -290,6 +324,7 @@ class App extends Component {
 										barGraphLocked={this.state.barGraphLocked}
 										singleRowLock={this.state.singleRowLock}
 										lineGraphLock={this.state.lineGraphLock}
+										completeDataLock={this.state.completeDataLock}
 										//All Crime By Month
 										allCrimeByMonth={this.state.allCrimeByMonth}
 										//Single Year
@@ -319,6 +354,7 @@ class App extends Component {
 										selectedSingleHour={this.state.selectedSingleHour}
 										allCrimeBySingleHour={this.state.allCrimeBySingleHour}
 										setSelectedSingleHour={this.setSelectedSingleHour}
+										singleHourCompleteData={this.state.singleHourCompleteData}
 										//Main Bar Graph
 										mainGraphData={this.state.allCrimeByTypeFromSingleDateData}
 										//Data Display Rows

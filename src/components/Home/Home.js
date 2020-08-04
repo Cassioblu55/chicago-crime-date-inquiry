@@ -18,6 +18,7 @@ import LineGraphDisplaySingleYearMonth from '../LineGraphDisplaySingleYearMonth'
 import LineGraphDisplaySingleYearMonthDay from '../LineGraphDisplaySingleYearMonthDay/LineGraphDisplaySingleYearMonthDay';
 import ZoomLevel from '../../helpers/ZoomLevel';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import CompleteDataDisplay from '../CompleteDataDisplay/CompleteDataDisplay';
 
 import DataTotal from '../DataTotal';
 
@@ -152,7 +153,7 @@ class Home extends Component {
 					)}
 				</Row>
 				<Row>
-					<Col>
+					<Col sm={12} md={6}>
 						<DataDisplay
 							data={this.getTopTenCrimeDays(this.props.allCrimeByDate)}
 							header='Days with Most Crime'
@@ -168,7 +169,7 @@ class Home extends Component {
 							}}
 						/>
 					</Col>
-					<Col>
+					<Col sm={12} md={6}>
 						<DataDisplay
 							data={this.getBottomTenCrimeDays(this.props.allCrimeByDate)}
 							header='Days with Least Crime'
@@ -192,13 +193,13 @@ class Home extends Component {
 						setSelectedSingleDay={this.props.setSelectedSingleDay}
 						setSelectedSingleHour={this.props.setSelectedSingleHour}
 						perviousSelectedHour={this.props.perviousSelectedHour}
-						hour={this.props.selectedSingleHour}
 						zoomLevel={this.props.zoomLevel}
+						hour={this.props.selectedSingleHour}
 						day={this.props.selectedSingleDay}
-						perviousSelectedDay={this.props.perviousSelectedDay}
 						year={this.props.selectedSingleYear}
-						perviousSelectedYear={this.props.perviousSelectedYear}
 						month={this.props.selectedSingleMonth}
+						perviousSelectedDay={this.props.perviousSelectedDay}
+						perviousSelectedYear={this.props.perviousSelectedYear}
 						perviousSelectedMonth={this.props.perviousSelectedMonth}
 						locked={this.props.lineGraphLock}
 					/>
@@ -285,6 +286,18 @@ class Home extends Component {
 							graphHeight={450}
 						/>
 					)}
+				</Row>
+				<Row>
+					{this.props.singleHourCompleteData &&
+						this.props.zoomLevel === ZoomLevel.HOUR && (
+							<CompleteDataDisplay
+								data={this.props.singleHourCompleteData}
+								hour={this.props.selectedSingleHour}
+								day={this.props.selectedSingleDay}
+								year={this.props.selectedSingleYear}
+								month={this.props.selectedSingleMonth}
+							/>
+						)}
 				</Row>
 			</Container>
 		);

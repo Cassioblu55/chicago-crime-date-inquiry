@@ -2,11 +2,11 @@
     border-bottom: rgb(114, 113, 113) solid 2px;
 }
 
-.dataDisplayRowLoading *:hover{
+.dataDisplayRowLoading:hover{
     cursor: progress;
 }
 
-.dataDisplayRowReady *:hover{
+.dataDisplayRowReady:hover{
     font-weight: bold;
     cursor: pointer;
 }

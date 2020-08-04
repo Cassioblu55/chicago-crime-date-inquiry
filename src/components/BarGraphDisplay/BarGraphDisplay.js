@@ -1,59 +1,59 @@
 import React, { Component } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import './BarGraphDisplay.css';
 import GetColor from '../../helpers/GetColor';
 import LoadingSpinner from '../LoadingSpinner';
 import DataTotal from '../DataTotal';
 
 class BarGraphDisplay extends Component {
-	render = () =>{
+	render = () => {
 		if (this.props.data !== undefined) {
 			return (
 				<Container>
-					<Row
-						style={{ height: this.props.graphHeight }}
-						className={this.props.locked && 'graphLoading'}>
-						<ResponsiveBar
-							data={this.createDisplayData(this.props.data)}
-							keys={Object.keys(this.props.data)}
-							indexBy='keyDisplay'
-							margin={{ top: 10, right: 130, bottom: 70, left: 60 }}
-							padding={0.3}
-							colors={GetColor}
-							borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-							axisTop={null}
-							axisRight={null}
-							axisBottom={{
-								tickSize: 5,
-								tickPadding: 5,
-								tickRotation: 90,
-								legend: this.props.axisBottomLegend,
-								legendPosition: 'middle',
-								legendOffset: 53,
-							}}
-							axisLeft={{
-								tickSize: 5,
-								tickPadding: 5,
-								tickRotation: 0,
-								legend: this.props.axisLeftLegend,
-								legendPosition: 'middle',
-								legendOffset: -52,
-							}}
-							labelSkipWidth={12}
-							labelSkipHeight={12}
-							labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-							animate={true}
-							motionStiffness={90}
-							motionDamping={15}
-						/>
+					<Row className={this.props.locked && 'graphLoading'}>
+						<Col style={{ height: this.props.graphHeight }}>
+							<ResponsiveBar
+								data={this.createDisplayData(this.props.data)}
+								keys={Object.keys(this.props.data)}
+								indexBy='keyDisplay'
+								margin={{ top: 10, right: 50, bottom: 70, left: 60 }}
+								padding={0.3}
+								colors={GetColor}
+								borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+								axisTop={null}
+								axisRight={null}
+								axisBottom={{
+									tickSize: 5,
+									tickPadding: 5,
+									tickRotation: 90,
+									legend: this.props.axisBottomLegend,
+									legendPosition: 'middle',
+									legendOffset: 53,
+								}}
+								axisLeft={{
+									tickSize: 5,
+									tickPadding: 5,
+									tickRotation: 0,
+									legend: this.props.axisLeftLegend,
+									legendPosition: 'middle',
+									legendOffset: -52,
+								}}
+								labelSkipWidth={12}
+								labelSkipHeight={12}
+								labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+								animate={true}
+								motionStiffness={90}
+								motionDamping={15}
+							/>
+						</Col>
 					</Row>
 				</Container>
 			);
 		} else {
 			return <LoadingSpinner height={this.props.graphHeight} />;
 		}
-	}
+	};
 
 	createDisplayData = (data) => {
 		const displayData = [];

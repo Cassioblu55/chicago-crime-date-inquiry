@@ -11,6 +11,7 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "canvasjs": "^1.8.3",
+    "capitalize": "^2.0.3",
     "date-and-time": "^0.13.1",
     "date-format": "^3.0.0",
     "moment": "^2.27.0",
