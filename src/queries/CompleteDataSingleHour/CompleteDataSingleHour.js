@@ -34,9 +34,6 @@ export function CompleteDataSingleHour(
 }
 
 function getCrimeData(data){
-	//2015-04-30T16:46:00.000
-	console.log(data[0].date.substring(14, 16));
-
 	return data
 		.map((row) => {
 			return { ...row, minute: parseInt(row.date.substring(14,16)) };
