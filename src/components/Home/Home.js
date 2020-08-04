@@ -17,6 +17,7 @@ import LineGraphDisplaySingleYear from '../LineGraphDisplaySingleYear';
 import LineGraphDisplaySingleYearMonth from '../LineGraphDisplaySingleYearMonth';
 import LineGraphDisplaySingleYearMonthDay from '../LineGraphDisplaySingleYearMonthDay/LineGraphDisplaySingleYearMonthDay';
 import ZoomLevel from '../../helpers/ZoomLevel';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 import DataTotal from '../DataTotal';
 
@@ -143,10 +144,12 @@ class Home extends Component {
 						graphHeight={400}
 						locked={this.props.barGraphLocked}
 					/>
-					{this.props.mainGraphData && <DataTotal
-						header={`Total Crime Reported on ${dateDisplay}`}
-						total={this.getMainBarGraphTotal(this.props.mainGraphData)}
-					/>}
+					{this.props.mainGraphData && (
+						<DataTotal
+							header={`Total Crime Reported on ${dateDisplay}`}
+							total={this.getMainBarGraphTotal(this.props.mainGraphData)}
+						/>
+					)}
 				</Row>
 				<Row>
 					<Col>
@@ -201,29 +204,37 @@ class Home extends Component {
 					/>
 				</Row>
 				<Row>
-					{this.getSingleZoomGraphDisplay(ZoomLevel.HOUR) && (
-						<Container>
-							<BarGraphDisplay
-								data={this.props.allCrimeBySingleHour}
-								axisLeftLegend='Crime Count'
-								axisBottomLegend='Type'
-								locked={this.props.lineGraphLock}
-								graphHeight={450}
-							/>
-							{this.props.allCrimeBySingleHour && <DataTotal
-								header={`Crime from ${Moment(
-									`${this.props.selectedSingleHour}:00:00`,
-									'HH:mm:ss'
-								).format('LT')} - ${Moment(
-									`${this.props.selectedSingleHour}:59:59`,
-									'HH:mm:ss'
-								).format('LT')}`}
-								total={this.getMainBarGraphTotal(
-									this.props.allCrimeBySingleHour
+					{this.getSingleZoomGraphDisplay(ZoomLevel.HOUR) &&
+						this.props.allCrimeBySingleHour === undefined && (
+							<LoadingSpinner height={450} />
+						)}
+
+					{this.getSingleZoomGraphDisplay(ZoomLevel.HOUR) &&
+						this.props.allCrimeBySingleHour !== undefined && (
+							<Container>
+								<BarGraphDisplay
+									data={this.props.allCrimeBySingleHour}
+									axisLeftLegend='Crime Count'
+									axisBottomLegend='Type'
+									locked={this.props.lineGraphLock}
+									graphHeight={450}
+								/>
+								{this.props.allCrimeBySingleHour && (
+									<DataTotal
+										header={`Crime from ${Moment(
+											`${this.props.selectedSingleHour}:00:00`,
+											'HH:mm:ss'
+										).format('LT')} - ${Moment(
+											`${this.props.selectedSingleHour}:59:59`,
+											'HH:mm:ss'
+										).format('LT')}`}
+										total={this.getMainBarGraphTotal(
+											this.props.allCrimeBySingleHour
+										)}
+									/>
 								)}
-							/>}
-						</Container>
-					)}
+							</Container>
+						)}
 					{this.getSingleZoomGraphDisplay(ZoomLevel.DAY) && (
 						<LineGraphDisplaySingleYearMonthDay
 							data={this.props.allCrimeBySingleDay}
