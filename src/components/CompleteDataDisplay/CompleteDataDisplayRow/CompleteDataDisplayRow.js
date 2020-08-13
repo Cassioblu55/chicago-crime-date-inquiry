@@ -6,9 +6,10 @@ import Capitalize from 'capitalize';
 import './CompleteDataDisplayRow.css';
 import Numeral from 'numeral';
 
-
+// Hou general comment): Take a look at all the components in your codebase. A follow-up challenge is for you to refactor class components that don't rely on state to use the functional stateless pattern.
 class CompleteDataDisplayRow extends Component {
 
+	// Hou comment: since capitalizeFirstLetter does not rely on `this`, we don't have to attach it to the class and we can probably move it into the helpers folder so that other components can use it too
 	capitalizeFirstLetter(sentence) {
 		return (
 			sentence.charAt(0).toUpperCase() + sentence.substring(1).toLowerCase()
@@ -16,8 +17,10 @@ class CompleteDataDisplayRow extends Component {
 	}
 
 	render() {
-		if (this.props.data !== undefined) {
+		// Hou comment: if a variable is defined with a truthy value, then the condition will evaluate to true and we don't have to check it against undefined.
+		if (this.props.data) {
 			let data = this.props.data;
+			// Hou comment: how would you destructure this.props.data to extract the variables you need?
 			return (
 				<Container className='fullDataCell'>
 					<Row>

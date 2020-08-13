@@ -11,7 +11,7 @@ import DataTotal from '../DataTotal';
 class LineGraphDisplaySingleYearMonthDay extends Component {
 	render() {
 		var self = this;
-		if (this.props.data !== undefined && this.props.locked === false) {
+		if (this.props.data !== undefined && !this.props.locked) {
 			return (
 				<Container>
 					<Row style={{ height: `${this.props.graphHeight}px` }}>

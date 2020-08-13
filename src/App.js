@@ -9,6 +9,8 @@ import { Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Home from './components/Home';
 
+// Hou comment: nice job with keeping the queries in their own folders for
+// better separation of concerns!
 //QUERY HELPERS
 import { AllCrimeByTypeFromSingleDate } from './queries/AllCrimeByTypeFromSingleDate/AllCrimeByTypeFromSingleDate';
 import { AllCrimeByDate } from './queries/AllCrimeByDate/AllCrimeByDate';
@@ -71,15 +73,18 @@ class App extends Component {
 	}
 
 	callOnErrorDefault = (error) => {
+		// Hou comment: for a better user experience, perhaps display an error message to the user
 		console.log(error);
 	};
 
 	//Get All Crimes for every year
-	getAllCrimeByMonth() {
-		let self = this;
+	getAllCrimeByMonth = () => {
+		// Hou comment: we don't conventionally store `this` in a variable
+		// You can use an arrow function instead to define getAllCrimeByMonth to avoid losing the this context in your callback function on line 85 
+		// I'd encourage you to refactor all of your class methods to use the arrow function syntax, to preserve the `this` context automatically inside callback functions
 		this.setState({ lineGraphLock: true });
-		AllCrimeByMonth(function (results) {
-			self.setState({ allCrimeByMonth: results, lineGraphLock: true });
+		AllCrimeByMonth((results) => {
+			this.setState({ allCrimeByMonth: results, lineGraphLock: true });
 		}, this.callOnErrorDefault);
 	}
 
@@ -127,7 +132,7 @@ class App extends Component {
 	};
 
 	getCrimeDataBySingleYear = (year) => {
-		if (year !== undefined) {
+		if (year) {
 			this.setState({ lineGraphLock: true });
 			let self = this;
 			SingleYear(
@@ -150,26 +155,26 @@ class App extends Component {
 			perviousSelectedDay: undefined,
 			perviousSelectedHour: undefined,
 			selectedSingleYear: year,
-			zoomLevel: year === undefined ? ZoomLevel.ALL : ZoomLevel.YEAR,
+			zoomLevel: !year ? ZoomLevel.ALL : ZoomLevel.YEAR,
 		});
 		this.getCrimeDataBySingleYear(year);
 	};
 
 	//Single Month
 	setSelectedSingleMonth = (month) => {
-		if (this.state.selectedSingleYear !== undefined) {
+		if (this.state.selectedSingleYear) {
 			this.setState({
 				perviousSelectedMonth:
 					this.state.selectedSingleMonth || this.state.perviousSelectedMonth,
 				selectedSingleMonth: month,
-				zoomLevel: month === undefined ? ZoomLevel.YEAR : ZoomLevel.MONTH,
+				zoomLevel: !month ? ZoomLevel.YEAR : ZoomLevel.MONTH,
 			});
 			this.getCrimeDataBySingleMonth(this.state.selectedSingleYear, month);
 		}
 	};
 
 	getCrimeDataBySingleMonth = (year, month) => {
-		if (year !== undefined && month !== undefined) {
+		if (year && month) {
 			this.setState({ lineGraphLock: true });
 			let self = this;
 			SingleMonth(
@@ -188,26 +193,31 @@ class App extends Component {
 
 	//Single Day
 	setSelectedSingleDay = (day) => {
+		// Hou comment: let's destructure this.state to simplify the syntax
+		const {
+			selectedSingleYear,
+			selectedSingleMonth,
+			perviousSelectedDay,
+		}
 		if (
-			this.state.selectedSingleYear !== undefined &&
-			this.state.selectedSingleMonth !== undefined
+			selectedSingleYear &&
+			selectedSingleMonth
 		) {
 			this.setState({
-				perviousSelectedDay:
-					this.state.selectedSingleDay || this.state.perviousSelectedDay,
+				perviousSelectedDay: selectedSingleDay || perviousSelectedDay,
 				selectedSingleDay: day,
-				zoomLevel: day === undefined ? ZoomLevel.MONTH : ZoomLevel.DAY,
+				zoomLevel: !day ? ZoomLevel.MONTH : ZoomLevel.DAY,
 			});
 			this.getCrimeDataBySingleDay(
-				this.state.selectedSingleYear,
-				this.state.selectedSingleMonth,
+				selectedSingleYear,
+				selectedSingleMonth,
 				day
 			);
 		}
 	};
 
 	getCrimeDataBySingleDay = (year, month, day) => {
-		if (year !== undefined && month !== undefined && day !== undefined) {
+		if (year && month && day) {
 			this.setState({ lineGraphLock: true });
 			let self = this;
 			SingleDay(
@@ -227,10 +237,11 @@ class App extends Component {
 
 	//Single Hour
 	setSelectedSingleHour = (hour) => {
+		// Hou comment: destructure this.state like what we did with setSelectedSingleDay above to avoid accessing the same properties on this.state repeatedly
 		if (
-			this.state.selectedSingleYear !== undefined &&
-			this.state.selectedSingleMonth !== undefined &&
-			this.state.selectedSingleDay !== undefined
+			this.state.selectedSingleYear &&
+			this.state.selectedSingleMonth &&
+			this.state.selectedSingleDay
 		) {
 			this.setState({
 				perviousSelectedHour:
@@ -255,10 +266,10 @@ class App extends Component {
 
 	getCrimeDataBySingleHour = (year, month, day, hour) => {
 		if (
-			year !== undefined &&
-			month !== undefined &&
-			day !== undefined &&
-			hour !== undefined
+			year &&
+			month &&
+			day &&
+			hour
 		) {
 			this.setState({ lineGraphLock: true });
 			let self = this;
@@ -280,10 +291,10 @@ class App extends Component {
 
 	getCompleteDataSingleHour = (year, month, day, hour) => {
 		if (
-			year !== undefined &&
-			month !== undefined &&
-			day !== undefined &&
-			hour !== undefined
+			year &&
+			month &&
+			day &&
+			hour
 		) {
 			this.setState({ completeDataLock: true });
 			let self = this;
@@ -304,6 +315,7 @@ class App extends Component {
 	};
 
 	render() {
+		// Hou comment: destructure this.state like what we did with setSelectedSingleDay above to avoid accessing the same properties on this.state repeatedly
 		return (
 			<Container
 				className={
@@ -377,6 +389,7 @@ class App extends Component {
 		);
 	}
 
+	// Hou comment: move this method above the render() method for easier discoverability
 	setLineGraphColor = (color) => {
 		this.setState({ lineGraphColor: color });
 	};

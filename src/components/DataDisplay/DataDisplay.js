@@ -19,6 +19,7 @@ class DataDisplay extends Component {
 	render() {
 		if (this.props.data !== undefined) {
 			return (
+				{/* Hou comment: consider applying styles with a css selector in an external stylesheet rather than inlining the styles */}
 				<Container style={{ marginBottom: '15px' }}>
 					<h6 className='text-center dataDisplayHeader'>{this.props.header}</h6>
 					{this.props.data.map((row, index) => {

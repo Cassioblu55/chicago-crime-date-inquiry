@@ -1,3 +1,5 @@
+/* Hou comment: If you're interested in learning to use the popular Block-Element-Modifier pattern for organizing and naming your CSS code, here's a 20 minute guide: https://www.smashingmagazine.com/2018/06/bem-for-beginners/ */
+
 .anyGraphsLoading{
     cursor: progress;
 }
