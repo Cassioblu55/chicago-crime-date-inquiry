@@ -1,3 +1,4 @@
+// Hou comment: You did an impressive job with these query helper methods!
 import { GetParams } from './GetParams';
 
 //APIS
@@ -24,7 +25,7 @@ function groupCrimeByDate(data) {
 	let groupedData = {};
 	for (let row of data) {
 		const type = row.date.substring(5, 10);
-		if (groupedData[type] !== undefined) {
+		if (groupedData[type]) {
 			groupedData[type] = groupedData[type] + parseInt(row.count);
 		} else {
 			groupedData[type] = parseInt(row.count);

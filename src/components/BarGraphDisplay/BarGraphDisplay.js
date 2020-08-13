@@ -6,9 +6,19 @@ import GetColor from '../../helpers/GetColor';
 import LoadingSpinner from '../LoadingSpinner';
 import DataTotal from '../DataTotal';
 
+// Hou comment: As a follow-up challenge, how would you refactor BarGraphDisplay to use a functional component + Hooks? In general, how would you refactor your class components that don't rely state to use functional components? 
 class BarGraphDisplay extends Component {
 	render = () => {
-		if (this.props.data !== undefined) {
+		// Hou comment: you could use destructuring to extract your props into variables at the top of the function, so you don't have to access them repeatedly in this.props
+		// const {
+		// 	axisBottomLegend,
+		// 	axisLeftLegend,
+		// 	data,
+		// 	locked,
+		// 	graphHeight,
+		// } = this.props
+		// As a follow-up challenge, consider refactoring all your components to use this destructuring pattern.
+		if (this.props.data) {
 			return (
 				<Container>
 					<Row className={this.props.locked && 'graphLoading'}>

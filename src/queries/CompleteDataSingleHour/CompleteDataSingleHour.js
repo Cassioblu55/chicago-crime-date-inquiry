@@ -15,10 +15,10 @@ export function CompleteDataSingleHour(
 	callOnError
 ) {
 	if (
-		year !== undefined &&
-		month !== undefined &&
-		day !== undefined &&
-		hour !== undefined
+		year &&
+		month &&
+		day &&
+		hour
 	) {
 		ChicagoCrimeDataApi()
 			.get(CRIMES_2001_TO_PRESENT, {

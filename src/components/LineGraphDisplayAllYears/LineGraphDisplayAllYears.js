@@ -11,6 +11,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import './LineGraphDisplayAllYears.css';
 
 class LineGraphDisplayAllYears extends Component {
+	// Hou comment: we typically order the class methods in such a way that the render() method comes last. Take a look at the Airbnb style guide for some ideas on how to order your class methods: https://github.com/airbnb/javascript/tree/master/react#ordering
 	render = () => {
 		if (this.props.locked === false && this.props.data !== undefined) {
 			let self = this;
